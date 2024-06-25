@@ -24,16 +24,16 @@ class ClusterModel(db.Model):
 
 # the table for all anchors, including which cluster they are associated with, their x and y positions,
 # and the distance to their cluster tag
-class Anchors(db.Model):
+class AnchorModel(db.Model):
    __tablename__ = "anchors"
    anchor_id = db.Column(db.Integer, primary_key = True)
    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.cluster_id", ondelete = "CASCADE"), nullable=False)
-   anchor_x = db.Column(db.Integer, nullable=False, default = 0)
-   anchor_y = db.Column(db.Integer, nullable=False, default = 0)
-   anchor_distance = db.Column(db.Float, nullable=False, default = 0)
+   anch_x = db.Column(db.Integer, nullable=False, default = 0)
+   anch_y = db.Column(db.Integer, nullable=False, default = 0)
+   anchor_distance = db.Column(db.Float, nullable=False, default = 0.0)
 
    def __repr__(self):
-      return f"Cluster(anchor = {self.anchor_id}, cluster = {self.cluster_id})"
+      return f"Anchor(anchor_id = {self.anchor_id}, cluster_id = {self.cluster_id}, anch_x = {self.anch_x}, anch_y = {self.anch_y}, anchor_distance = {self.anchor_distance})"
 
 # Serialize data for a cluster request
 clusterFields = {
@@ -114,13 +114,78 @@ class Cluster(Resource):
 api.add_resource(Clusters, '/api/clusters/')
 api.add_resource(Cluster, '/api/clusters/<int:id>')
 
-### API calls for all anchors
+### API calls for all anchors ###
+class Anchors(Resource):
+   # Parse user arguments in request to API
+   user_args = reqparse.RequestParser()
+   user_args.add_argument('cluster_id', type=int, required=True, help="Cluster id cannot be empty")
+   user_args.add_argument('anch_x', type=int, required=True, help="Anchor x position cannot be empty")
+   user_args.add_argument('anch_y', type=int, required=True, help="Anchor y position cannot be empty")
+
+   # API call to get all of the anchors
+   @marshal_with(anchorFields)
+   def get(self):
+      clusters = ClusterModel.query.all()
+      return clusters
+   
+   # API call to create a new anchor for cluster_id
+   @marshal_with(anchorFields)
+   def post(self):
+      args = self.user_args.parse_args()
+      cluster = ClusterModel.query.filter_by(cluster_id=args["cluster_id"]).first()
+      if not cluster:
+         abort(404, "Cluster not found")
+      anchor = AnchorModel(cluster_id=args["cluster_id"], anch_x=args["anch_x"],
+                           anch_y=args["anch_y"], anchor_distance = 0)
+      db.session.add(anchor)
+      db.session.commit()
+      anchors = AnchorModel().query.all()
+      return anchors, 201
+   
+### API calls for a specific anchor ###
 class Anchor(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
    user_args.add_argument('anchor_id', type=int, required=True, help="Anchor id cannot be empty")
-   user_args.add_argument('cluster_id', type=int, required=True, help="Cluster id cannot be empty")
 
+   # API call to get a specific anchor
+   @marshal_with(anchorFields)
+   def get(self, id):
+      anchor = AnchorModel.query.filter_by(anchor_id=id).first()
+      if not anchor:
+         abort(404, "Anchor not found")
+      return anchor
+   
+   # API call to update distance for a specific anchor
+   @marshal_with(anchorFields)
+   def patch(self, id):
+      args = self.user_args.parse_args()
+      user_args = reqparse.RequestParser()
+      user_args.add_argument('anchor_distance', type=float, required=True, help="Anchor distance cannot be empty")
+      anchor = AnchorModel.query.filter_by(anchor_id=id).first()
+      if not anchor:
+         abort(404, "Anchor not found")
+      anchor.anchor_distance = args["anchor_distance"]
+      """TODO Recalculate senior position on anchor update
+      ~
+      ~
+      ~
+      ~
+      """
+      db.session.commit()
+      return anchor
+   
+   # API call to delete a specific cluster
+   @marshal_with(clusterFields)
+   def delete(self, id):
+      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
+      if not cluster:
+         abort(404, "Cluster not found")
+      db.session.delete(cluster)
+      db.session.commit()
+      return ClusterModel.query.all(), 200
+
+api.add_resource(Anchors, '/api/anchors/')
 
 # Home page route
 @app.route('/')
