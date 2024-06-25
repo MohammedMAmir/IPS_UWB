@@ -175,17 +175,18 @@ class Anchor(Resource):
       db.session.commit()
       return anchor
    
-   # API call to delete a specific cluster
-   @marshal_with(clusterFields)
+   # API call to delete a specific anchor
+   @marshal_with(anchorFields)
    def delete(self, id):
-      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
-      if not cluster:
+      anchor = AnchorModel.query.filter_by(anchor_id=id).first()
+      if not anchor:
          abort(404, "Cluster not found")
-      db.session.delete(cluster)
+      db.session.delete(anchor)
       db.session.commit()
-      return ClusterModel.query.all(), 200
+      return AnchorModel.query.all(), 200
 
 api.add_resource(Anchors, '/api/anchors/')
+api.add_resource(Anchor, '/api/anchor/<id>')
 
 # Home page route
 @app.route('/')
