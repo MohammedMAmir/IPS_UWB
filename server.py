@@ -125,8 +125,8 @@ class Anchors(Resource):
    # API call to get all of the anchors
    @marshal_with(anchorFields)
    def get(self):
-      clusters = ClusterModel.query.all()
-      return clusters
+      anchors = AnchorModel.query.all()
+      return anchors
    
    # API call to create a new anchor for cluster_id
    @marshal_with(anchorFields)
@@ -191,7 +191,16 @@ api.add_resource(Anchor, '/api/anchor/<id>')
 # Home page route
 @app.route('/')
 def home():
-   return '<h1>UWB IPS REST API</h1>'
+   clusters = ClusterModel.query.all()
+   anchors = AnchorModel.query.all()
+   output = '<h1>UWB IPS REST API</h1>'
+
+   for cluster in clusters:
+      output += '<h3>'+cluster+'/h3>'
+
+   for anchor in anchors:
+      anchor += '<h3>'+ anchor + '/h3'
+   return 
 
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
