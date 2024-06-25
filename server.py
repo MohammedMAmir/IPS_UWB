@@ -1,9 +1,18 @@
 #!/usr/bin/python           
 # This is server.py file
+from flask import Flask
 
-import socket               
 # Import socket module
+import socket               
 
+app = Flask(__name__)
+
+# Home page route
+@app.route('/')
+def home():
+   return '<h1>UWB IPS REST API</h1>'
+
+'''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
 # Create a socket object
 host = socket.gethostname()
@@ -24,3 +33,8 @@ while True:
    c.send('Thank you for connecting')
    c.close()                
 # Output the message and Close the connection
+'''   
+
+# Run the app
+if __name__ == '__main__':
+   app.run(debug=True)
