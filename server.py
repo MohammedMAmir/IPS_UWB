@@ -2,17 +2,16 @@
 # This is server.py file
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort              
 
-# Import socket module
-import socket               
-
+### Setup ###
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 api = Api(app)
 
-# Database tables
+### Database tables ###
+# the table for a cluster of anchors and tags
 class ClusterModel(db.Model):
    __tablename__ = "clusters"
    cluster_id = db.Column(db.Integer, primary_key=True)
@@ -23,19 +22,20 @@ class ClusterModel(db.Model):
    def __repr__(self):
       return f"Cluster(cluster_id = {self.cluster_id}, senior_name = {self.senior_name})"
 
+# the table for all anchors, including which cluster they are associated with, their x and y positions,
+# and the distance to their cluster tag
 class Anchors(db.Model):
    __tablename__ = "anchors"
    anchor_id = db.Column(db.Integer, primary_key = True)
    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.cluster_id", ondelete = "CASCADE"), nullable=False)
+   anchor_x = db.Column(db.Integer, nullable=False, default = 0)
+   anchor_y = db.Column(db.Integer, nullable=False, default = 0)
+   anchor_distance = db.Column(db.Float, nullable=False, default = 0)
 
    def __repr__(self):
       return f"Cluster(anchor = {self.anchor_id}, cluster = {self.cluster_id})"
 
-# Parse user arguments in request to API
-user_args = reqparse.RequestParser()
-user_args.add_argument('senior_name', type=str, required=True, help="Senior name cannot be empty")
-
-# Serialize data
+# Serialize data for a cluster request
 clusterFields = {
    'cluster_id': fields.Integer,
    'senior_name': fields.String,
@@ -43,8 +43,21 @@ clusterFields = {
    'senior_y': fields.Integer
 }
 
-# API calls to get all of the clusters, create new clusters, and update clusters
+# Serialize data for a anchor request
+anchorFields = {
+   'anchor_id': fields.Integer,
+   'cluster_id': fields.Integer,
+   'anchor_x': fields.Integer,
+   'anchor_y': fields.Integer,
+   'anchor_distance': fields.Float
+}
+
+### API calls for all clusters ###
 class Clusters(Resource):
+   # Parse user arguments in request to API
+   user_args = reqparse.RequestParser()
+   user_args.add_argument('senior_name', type=str, required=True, help="Senior name cannot be empty")
+
    # API call to get all of the clusters
    @marshal_with(clusterFields)
    def get(self):
@@ -54,7 +67,8 @@ class Clusters(Resource):
    # API call to create a new cluster for senior_name
    @marshal_with(clusterFields)
    def post(self):
-      args = user_args.parse_args()
+      
+      args = self.user_args.parse_args()
       cluster = ClusterModel(senior_name=args["senior_name"], 
                              senior_x = 0, senior_y = 0)
       db.session.add(cluster)
@@ -62,7 +76,11 @@ class Clusters(Resource):
       clusters = ClusterModel().query.all()
       return clusters, 201
 
-class Cluster(Resource):   
+### API calls for a specific cluster ###
+class Cluster(Resource):
+   # Parse user arguments in request to API
+   user_args = reqparse.RequestParser()
+   user_args.add_argument('senior_name', type=str, required=True, help="Senior name cannot be empty")   
    # API call to get a specific cluster
    @marshal_with(clusterFields)
    def get(self, id):
@@ -70,10 +88,39 @@ class Cluster(Resource):
       if not cluster:
          abort(404, "Cluster not found")
       return cluster
+   
+   # API call to update senior name for a specific cluster
+   @marshal_with(clusterFields)
+   def patch(self, id):
+      args = self.user_args.parse_args()
+      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
+      if not cluster:
+         abort(404, "Cluster not found")
+      cluster.senior_name = args["senior_name"]
+      db.session.commit()
+      return cluster
+   
+   # API call to delete a specific cluster
+   @marshal_with(clusterFields)
+   def delete(self, id):
+      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
+      if not cluster:
+         abort(404, "Cluster not found")
+      db.session.delete(cluster)
+      db.session.commit()
+      return ClusterModel.query.all(), 200
 
 # API route for updating clusters
 api.add_resource(Clusters, '/api/clusters/')
 api.add_resource(Cluster, '/api/clusters/<int:id>')
+
+### API calls for all anchors
+class Anchor(Resource):
+   # Parse user arguments in request to API
+   user_args = reqparse.RequestParser()
+   user_args.add_argument('anchor_id', type=int, required=True, help="Anchor id cannot be empty")
+   user_args.add_argument('cluster_id', type=int, required=True, help="Cluster id cannot be empty")
+
 
 # Home page route
 @app.route('/')
@@ -105,4 +152,4 @@ while True:
 
 # Run the app
 if __name__ == '__main__':
-   app.run(debug=True)
+   app.run(host='0.0.0.0', port=80)
