@@ -2,7 +2,9 @@
 # This is server.py file
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort              
+from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
+import math
+from scipy.optimize import minimize            
 
 ### Setup ###
 app = Flask(__name__)
@@ -35,6 +37,45 @@ class AnchorModel(db.Model):
    def __repr__(self):
       return f"Anchor(anchor_id = {self.anchor_id}, cluster_id = {self.cluster_id}, anch_x = {self.anch_x}, anch_y = {self.anch_y}, anchor_distance = {self.anchor_distance})"
 
+# Mean Square Error
+# locations: [ (x1, y1), ... ]
+# distances: [ distance1, ... ]
+def mse(x, locations, distances):
+    mse = 0.0
+    for location, distance in zip(locations, distances):
+        distance_calculated = math.dist(x, location)
+        mse += math.pow(distance_calculated - distance, 2.0)
+    return mse / len(distances)
+
+def update_location(anchor: AnchorModel):
+   anchorCluster = anchor.cluster_id
+   cluster = ClusterModel.query.filter_by(cluster_id=anchorCluster).first()
+   xToUpdate = float(cluster.senior_x)
+   yToUpdate = float(cluster.senior_y)
+   
+   anchorsInCluster = AnchorModel.query.filter_by(cluster_id=anchorCluster).all()
+   locations = []
+   distances = []
+   for anchors in anchorsInCluster:
+      locations.append((int(anchors.anch_x), int(anchors.anch_y)))
+      distances.append((float(anchors.anchor_distance)))
+   
+   initial_guess = (xToUpdate, yToUpdate)
+   result = minimize(
+      mse,                         # The error function
+      initial_guess,            # The initial guess
+      args=(locations, distances), # Additional parameters for mse
+      method='L-BFGS-B',           # The optimisation algorithm
+      options={
+         'ftol':1e-5,         # Tolerance
+         'maxiter': 1e+7      # Maximum iterations
+      })
+   
+   cluster.senior_x = result.x[0]
+   cluster.senior_y = result.x[1]
+   db.session.commit()
+   return result
+
 # Serialize data for a cluster request
 clusterFields = {
    'cluster_id': fields.Integer,
@@ -47,8 +88,8 @@ clusterFields = {
 anchorFields = {
    'anchor_id': fields.Integer,
    'cluster_id': fields.Integer,
-   'anchor_x': fields.Integer,
-   'anchor_y': fields.Integer,
+   'anch_x': fields.Integer,
+   'anch_y': fields.Integer,
    'anchor_distance': fields.Float
 }
 
@@ -146,8 +187,9 @@ class Anchors(Resource):
 class Anchor(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
-   user_args.add_argument('anchor_id', type=int, required=True, help="Anchor id cannot be empty")
-
+   user_args.add_argument('anchor_distance', type=float, required=True, help="Anchor distance cannot be empty")
+   user_args.add_argument('anch_x', type=int, required=False, help="Anchor distance cannot be empty")
+   user_args.add_argument('anch_y', type=int, required=False, help="Anchor distance cannot be empty")
    # API call to get a specific anchor
    @marshal_with(anchorFields)
    def get(self, id):
@@ -160,20 +202,23 @@ class Anchor(Resource):
    @marshal_with(anchorFields)
    def patch(self, id):
       args = self.user_args.parse_args()
-      user_args = reqparse.RequestParser()
-      user_args.add_argument('anchor_distance', type=float, required=True, help="Anchor distance cannot be empty")
       anchor = AnchorModel.query.filter_by(anchor_id=id).first()
       if not anchor:
          abort(404, "Anchor not found")
       anchor.anchor_distance = args["anchor_distance"]
+      if args["anch_x"]:
+         anchor.anch_x = args["anch_x"]
+      if args["anch_y"]:
+         anchor.anch_y = args["anch_y"]
       """TODO Recalculate senior position on anchor update
       ~
       ~
       ~
       ~
       """
+      result = update_location(anchor)
       db.session.commit()
-      return anchor
+      return anchor, 200
    
    # API call to delete a specific anchor
    @marshal_with(anchorFields)
@@ -195,12 +240,14 @@ def home():
    anchors = AnchorModel.query.all()
    output = '<h1>UWB IPS REST API</h1>'
 
+   output += '<h2>Senior Clusters:</h2>'
    for cluster in clusters:
-      output += '<h3>'+cluster+'/h3>'
+      output += '<h3>'+cluster.senior_name+'</h3>'
 
+   output += '<h2>Anchors:</h2>'
    for anchor in anchors:
-      anchor += '<h3>'+ anchor + '/h3'
-   return 
+      output += '<h3>'+ str(anchor.anchor_id) + '</h3>'
+   return output
 
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
