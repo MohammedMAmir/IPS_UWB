@@ -1,0 +1,156 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "IPS_UWB",
+    "dateExported": "2024-06-27T17:33:36.500Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "2e2936a0-c0b3-4c02-aefc-7c72b1053fd4",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "create_cluster",
+            "url": "http://127.0.0.1:81/api/clusters/",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-06-27T17:04:02.832Z",
+            "modified": "2024-06-27T17:29:58.346Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"senior_name\": \"test\"}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "10969afa-c456-4e15-80ec-c79c3c4ff6c0",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "create_anchor",
+            "url": "http://127.0.0.1:81/api/anchors/",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-06-27T17:05:36.140Z",
+            "modified": "2024-06-27T17:21:36.198Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"cluster_id\": 1, \"anch_x\": 0, \"anch_y\": 0}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e54774d4-2d29-48ed-8230-a5f96c9ba51e",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "create_anchor",
+            "url": "127.0.0.1:81/api/anchors/",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-06-27T17:08:19.995Z",
+            "modified": "2024-06-27T17:09:21.910Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"cluster_id\": 1, \"anch_x\": 30, \"anch_y\": 0}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8cac3e77-a72f-41a4-bf3f-8820bd5ccb08",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "create_anchor Copy",
+            "url": "127.0.0.1:81/api/anchors/",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-06-27T17:09:45.216Z",
+            "modified": "2024-06-27T17:10:50.520Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"cluster_id\": 1, \"anch_x\": 52, \"anch_y\": 0}",
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "res-code",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "201"
+                }
+            ]
+        },
+        {
+            "_id": "32855307-04ae-41bf-9853-09fb648385e9",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "anchor1 distance",
+            "url": "127.0.0.1:81/api/anchor/1",
+            "method": "PATCH",
+            "sortNum": 60000,
+            "created": "2024-06-27T17:10:36.799Z",
+            "modified": "2024-06-27T17:25:31.892Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"anchor_distance\": 39}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "07ece076-7a7f-467d-bf0a-13ea23271ce5",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "anchor2 distance",
+            "url": "127.0.0.1:81/api/anchor/2",
+            "method": "PATCH",
+            "sortNum": 70000,
+            "created": "2024-06-27T17:16:18.257Z",
+            "modified": "2024-06-27T17:27:05.516Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"anchor_distance\": 24}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "ca06800b-fad4-48c4-9f81-d5a68a102fed",
+            "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
+            "containerId": "",
+            "name": "anchor3 distance",
+            "url": "127.0.0.1:81/api/anchor/3",
+            "method": "PATCH",
+            "sortNum": 80000,
+            "created": "2024-06-27T17:16:47.101Z",
+            "modified": "2024-06-27T17:17:02.218Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\"anchor_distance\": 32}",
+                "form": []
+            },
+            "tests": []
+        }
+    ],
+    "settings": {
+        "runOptions": {
+            "delay": 10,
+            "iterations": 1,
+            "dataFilePath": ""
+        }
+    }
+}
