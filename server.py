@@ -67,8 +67,8 @@ def update_location(anchor: AnchorModel):
       args=(locations, distances), # Additional parameters for mse
       method='L-BFGS-B',           # The optimisation algorithm
       options={
-         'ftol':1e-5,         # Tolerance
-         'maxiter': 1e+7      # Maximum iterations
+         'ftol':1e-2,         # Tolerance
+         'maxiter': 1e+8      # Maximum iterations
       })
    
    cluster.senior_x = result.x[0]
@@ -274,4 +274,4 @@ while True:
 
 # Run the app
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=80)
+   app.run(host='0.0.0.0', port=81)
