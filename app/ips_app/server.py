@@ -1,6 +1,6 @@
 #!/usr/bin/python           
 # This is server.py file
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 import math
@@ -238,7 +238,7 @@ api.add_resource(Anchor, '/api/anchor/<id>')
 def home():
    clusters = ClusterModel.query.all()
    anchors = AnchorModel.query.all()
-   output = '<h1>UWB IPS REST API</h1>'
+   '''output = '<h1>UWB IPS REST API</h1>'
 
    output += '<h2>Senior Clusters:</h2>'
    for cluster in clusters:
@@ -247,7 +247,8 @@ def home():
    output += '<h2>Anchors:</h2>'
    for anchor in anchors:
       output += '<h3>'+ str(anchor.anchor_id) + '</h3>'
-   return output
+   return output'''
+   return render_template('base.html', clusters=clusters)
 
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
