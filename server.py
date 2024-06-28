@@ -18,8 +18,8 @@ class ClusterModel(db.Model):
    __tablename__ = "clusters"
    cluster_id = db.Column(db.Integer, primary_key=True)
    senior_name = db.Column(db.String(80), nullable=False)
-   senior_x = db.Column(db.Integer, nullable=False, default = 0)
-   senior_y = db.Column(db.Integer, nullable=False, default = 0)
+   senior_x = db.Column(db.Float, nullable=False, default = 0)
+   senior_y = db.Column(db.Float, nullable=False, default = 0)
 
    def __repr__(self):
       return f"Cluster(cluster_id = {self.cluster_id}, senior_name = {self.senior_name})"
@@ -30,8 +30,8 @@ class AnchorModel(db.Model):
    __tablename__ = "anchors"
    anchor_id = db.Column(db.Integer, primary_key = True)
    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.cluster_id", ondelete = "CASCADE"), nullable=False)
-   anch_x = db.Column(db.Integer, nullable=False, default = 0)
-   anch_y = db.Column(db.Integer, nullable=False, default = 0)
+   anch_x = db.Column(db.Float, nullable=False, default = 0)
+   anch_y = db.Column(db.Float, nullable=False, default = 0)
    anchor_distance = db.Column(db.Float, nullable=False, default = 0.0)
 
    def __repr__(self):
@@ -80,16 +80,16 @@ def update_location(anchor: AnchorModel):
 clusterFields = {
    'cluster_id': fields.Integer,
    'senior_name': fields.String,
-   'senior_x': fields.Integer,
-   'senior_y': fields.Integer
+   'senior_x': fields.Float,
+   'senior_y': fields.Float
 }
 
 # Serialize data for a anchor request
 anchorFields = {
    'anchor_id': fields.Integer,
    'cluster_id': fields.Integer,
-   'anch_x': fields.Integer,
-   'anch_y': fields.Integer,
+   'anch_x': fields.Float,
+   'anch_y': fields.Float,
    'anchor_distance': fields.Float
 }
 
