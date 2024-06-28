@@ -238,16 +238,7 @@ api.add_resource(Anchor, '/api/anchor/<id>')
 def home():
    clusters = ClusterModel.query.all()
    anchors = AnchorModel.query.all()
-   '''output = '<h1>UWB IPS REST API</h1>'
 
-   output += '<h2>Senior Clusters:</h2>'
-   for cluster in clusters:
-      output += '<h3>'+cluster.senior_name+'</h3>'
-
-   output += '<h2>Anchors:</h2>'
-   for anchor in anchors:
-      output += '<h3>'+ str(anchor.anchor_id) + '</h3>'
-   return output'''
    return render_template('base.html', clusters=clusters)
 
 '''
