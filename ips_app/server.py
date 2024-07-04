@@ -1,5 +1,5 @@
 #!/usr/bin/python           
-# This is server.py file
+# This is server.py file built using the tutorial at https://www.youtube.com/watch?v=z3YMz-Gocmw&ab_channel=DaveGray
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
