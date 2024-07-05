@@ -18,8 +18,8 @@ class ClusterModel(db.Model):
    __tablename__ = "clusters"
    cluster_id = db.Column(db.Integer, primary_key=True)
    senior_name = db.Column(db.String(80), nullable=False)
-   senior_x = db.Column(db.Float, nullable=False, default = 0)
-   senior_y = db.Column(db.Float, nullable=False, default = 0)
+   senior_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
+   senior_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    num_anchors = db.Column(db.Integer, nullable=False, default = 0)
 
    def __repr__(self):
@@ -32,9 +32,9 @@ class AnchorModel(db.Model):
    __tablename__ = "anchors"
    anchor_id = db.Column(db.Integer, primary_key = True)
    cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.cluster_id", ondelete = "CASCADE"), nullable=False)
-   anch_x = db.Column(db.Float, nullable=False, default = 0)
-   anch_y = db.Column(db.Float, nullable=False, default = 0)
-   anchor_distance = db.Column(db.Float, nullable=False, default = 0.0)
+   anch_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
+   anch_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
+   anchor_distance = db.Column(db.Numeric(10,2), nullable=False, default = 0.0)
 
    def __repr__(self):
       return f"Anchor(anchor_id = {self.anchor_id}, cluster_id = {self.cluster_id}, anch_x = {self.anch_x}, anch_y = {self.anch_y}, anchor_distance = {self.anchor_distance})"
@@ -163,8 +163,8 @@ class Anchors(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
    user_args.add_argument('cluster_id', type=int, required=True, help="Cluster id cannot be empty")
-   user_args.add_argument('anch_x', type=int, required=True, help="Anchor x position cannot be empty")
-   user_args.add_argument('anch_y', type=int, required=True, help="Anchor y position cannot be empty")
+   user_args.add_argument('anch_x', type=float, required=True, help="Anchor x position cannot be empty")
+   user_args.add_argument('anch_y', type=float, required=True, help="Anchor y position cannot be empty")
 
    # API call to get all of the anchors
    @marshal_with(anchorFields)
@@ -265,4 +265,4 @@ while True:
 
 # Run the app
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=81)
+   app.run(host='0.0.0.0', port=81, debug=True)
