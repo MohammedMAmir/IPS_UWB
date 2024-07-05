@@ -20,9 +20,11 @@ class ClusterModel(db.Model):
    senior_name = db.Column(db.String(80), nullable=False)
    senior_x = db.Column(db.Float, nullable=False, default = 0)
    senior_y = db.Column(db.Float, nullable=False, default = 0)
+   num_anchors = db.Column(db.Integer, nullable=False, default = 0)
 
    def __repr__(self):
-      return f"Cluster(cluster_id = {self.cluster_id}, senior_name = {self.senior_name})"
+      return f"""Cluster(cluster_id = {self.cluster_id}, senior_name = {self.senior_name}, 
+      senior_x = {self.senior_x}, senior_y = {self.senior_y})"""
 
 # the table for all anchors, including which cluster they are associated with, their x and y positions,
 # and the distance to their cluster tag
@@ -81,7 +83,8 @@ clusterFields = {
    'cluster_id': fields.Integer,
    'senior_name': fields.String,
    'senior_x': fields.Float,
-   'senior_y': fields.Float
+   'senior_y': fields.Float,
+   'num_anchors': fields.Integer
 }
 
 # Serialize data for a anchor request
@@ -111,7 +114,7 @@ class Clusters(Resource):
       
       args = self.user_args.parse_args()
       cluster = ClusterModel(senior_name=args["senior_name"], 
-                             senior_x = 0, senior_y = 0)
+                             senior_x = 0, senior_y = 0, num_anchors=0)
       db.session.add(cluster)
       db.session.commit()
       clusters = ClusterModel().query.all()
@@ -178,6 +181,7 @@ class Anchors(Resource):
          abort(404, "Cluster not found")
       anchor = AnchorModel(cluster_id=args["cluster_id"], anch_x=args["anch_x"],
                            anch_y=args["anch_y"], anchor_distance = 0)
+      cluster.num_anchors += 1
       db.session.add(anchor)
       db.session.commit()
       anchors = AnchorModel().query.all()
@@ -210,12 +214,7 @@ class Anchor(Resource):
          anchor.anch_x = args["anch_x"]
       if args["anch_y"]:
          anchor.anch_y = args["anch_y"]
-      """TODO Recalculate senior position on anchor update
-      ~
-      ~
-      ~
-      ~
-      """
+
       result = update_location(anchor)
       db.session.commit()
       return anchor, 200
@@ -238,8 +237,8 @@ api.add_resource(Anchor, '/api/anchor/<id>')
 def home():
    clusters = ClusterModel.query.all()
    anchors = AnchorModel.query.all()
-
-   return render_template('base.html', clusters=clusters)
+   print(clusters)
+   return render_template('base.html', clusters=clusters, anchors=anchors)
 
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         

@@ -1,4 +1,4 @@
-from app.ips_app.server import app, db
+from server import app, db
 
 with app.app_context():
     db.create_all()
