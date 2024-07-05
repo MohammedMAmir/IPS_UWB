@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block nav %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="https://www.humanendeavour.org">Human Endeavour</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/createcluster">Create Cluster</a>
+            </li>
+            <!--<li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>-->
+        </ul>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2><b>Clusters</b></h2>
+    <div class="row">
+        {% for cluster in clusters %}
+            <div class="col-sm-4">
+                <div class="card">
+                    <h4><b>Senior Name:</b> {{cluster.senior_name}} </h4>
+                    <p><b>Senior Position:</b> ({{cluster.senior_x}}, {{cluster.senior_y}})</p>
+                    <p><b>Number of Anchors:</b> ({{cluster.num_anchors}})</p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+</div>
+<div class="container">
+    <h2><b>Anchors</b></h2>
+    <div class="row">
+        {% for anchor in anchors %}    
+                <div class="col-sm-4">
+                    <div class="card">
+                    <h4><b>Anchor ID:</b> {{anchor.anchor_id}}</h4>
+                    <p><b>Anchor Cluster:</b> {{anchor.cluster_id}}</p>
+                    <p><b>Anchor Position:</b>({{anchor.anch_x}}, {{anchor.anch_y}})</p>
+                    <p><b>Anchor Distance:</b>{{anchor.anchor_distance}}</p>
+                </div>
+            </div>
+        {% endfor %}    
+    </div>
+</div>
+{% endblock %}

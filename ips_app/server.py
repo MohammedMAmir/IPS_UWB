@@ -233,12 +233,16 @@ api.add_resource(Anchors, '/api/anchors/')
 api.add_resource(Anchor, '/api/anchor/<id>')
 
 # Home page route
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
    clusters = ClusterModel.query.all()
    anchors = AnchorModel.query.all()
    print(clusters)
-   return render_template('base.html', clusters=clusters, anchors=anchors)
+   return render_template('index.html', clusters=clusters, anchors=anchors)
+
+@app.route('/createcluster', methods=['GET', 'POST'])
+def create():
+   return render_template('createcluster.html')
 
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
