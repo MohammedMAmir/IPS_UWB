@@ -12,19 +12,22 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="https://www.humanendeavour.org">Human Endeavour</a>
+                <a class="navbar-brand" href="https://www.humanendeavour.org"><img src="{{url_for('static', filename='img/logo.png')}}"></img></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link main-color active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="/createcluster">Create Cluster</a>
+                    <a class="nav-link main-color" href="/createcluster">Create Cluster</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link main-color" href="/createanchor">Create Anchor</a>
                     </li>
                     <!--<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,8 +45,8 @@
                     </li>-->
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <input class="form-control me-2 main-color" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-danger main-color" type="submit">Search</button>
                 </form>
                 </div>
             </div>

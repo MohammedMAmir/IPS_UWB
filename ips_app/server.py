@@ -241,9 +241,12 @@ def home():
    return render_template('index.html', clusters=clusters, anchors=anchors)
 
 @app.route('/createcluster', methods=['GET', 'POST'])
-def create():
+def createcluster():
    return render_template('createcluster.html')
 
+@app.route('/createanchor', methods=['GET', 'POST'])
+def createanchor():
+   return render_template('createanchor.html')
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
 # Create a socket object

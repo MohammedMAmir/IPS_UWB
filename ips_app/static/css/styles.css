@@ -2,3 +2,36 @@
     margin-top: 5%;
     padding: 15px;
 }
+
+.btn{
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.heading{
+    margin-top: 25px;
+}
+
+body{
+    background-color: #ffffff;
+}
+
+.navbar{
+    background-color: #eecccc;
+}
+
+.main-color{
+    color: #994444
+}
+
+.nav-link{
+    font-weight: 800;
+}
+
+hr{
+    margin-top: 5px;
+}
+
+.section{
+    width: 70%
+}
