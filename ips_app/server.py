@@ -238,15 +238,15 @@ def home():
    clusters = ClusterModel.query.all()
    anchors = AnchorModel.query.all()
    print(clusters)
-   return render_template('index.html', clusters=clusters, anchors=anchors)
+   return render_template('index.html', clusters=clusters, anchors=anchors, page="home")
 
 @app.route('/createcluster', methods=['GET', 'POST'])
 def createcluster():
-   return render_template('createcluster.html')
+   return render_template('createcluster.html', page="cluster")
 
 @app.route('/createanchor', methods=['GET', 'POST'])
 def createanchor():
-   return render_template('createanchor.html')
+   return render_template('createanchor.html', page="anchor")
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
 # Create a socket object

@@ -35,3 +35,12 @@ hr{
 .section{
     width: 70%
 }
+
+.card-header{
+    background-color: #eecccc;
+    font-weight: 700;
+}
+
+.form-group{
+    padding: 10px;
+}

@@ -1,6 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Create a Cluster{% endblock %}
 
 {% block body %}
+<div class="main-content">
+    <div class="container section">
+        <form id="createcluster">
+            <div class="card">
+                <div class="card-header">Create a New Cluster
+                </div>
+                <div class="form-group">
+                    <label for="senior_name">Senior Name:</label>
+                    <input type="text" class="form-control" id="senior_name"
+                    name="senior_name" placeholder="Enter senior's name">
+                </div>
+                <button type="submit" class="btn btn-outline-danger alert-danger"><b>Submit</b></button>
+            </div> 
+        </form>
+    </div>
+</div>
+<script>
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const data = new FormData(event.target);
+
+        // Do a bit of work to convert the entries to a plain JS object
+        const value = Object.fromEntries(data.entries());
+
+        console.log(value.senior_name);
+        var body = {senior_name: value.senior_name};
+        postRequest(body);
+    }
+
+    function postRequest(data){
+        $.ajax({
+             type: "POST",
+             url: "/api/clusters",
+             data: JSON.stringify(data),// now data come in this function
+             contentType: "application/json; charset=utf-8",
+             crossDomain: true,
+             dataType: "json",
+             success: function (data, status, jqXHR) {
+
+                 alert("success");// write success in " "
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+          });
+    }
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+</script>
 {% endblock %}
