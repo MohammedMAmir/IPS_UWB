@@ -246,7 +246,8 @@ def createcluster():
 
 @app.route('/createanchor', methods=['GET', 'POST'])
 def createanchor():
-   return render_template('createanchor.html', page="anchor")
+   clusters = ClusterModel.query.all()
+   return render_template('createanchor.html', clusters=clusters, page="anchor")
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
 # Create a socket object
