@@ -4,30 +4,38 @@
 
 {% block body %}
 <div class="main-content">
+    <!-- Tags Section -->
     <div class="container section">
-        <h2 class="heading"><b>Clusters </b><a role="button" class="btn btn-secondary btn-sm" href="/createcluster">+</a></h2>
+        <!-- Tags Section Header -->
+        <h2 class="heading"><b>Tags </b><a role="button" class="btn btn-secondary btn-sm" href="/createtag">+</a></h2>
         <hr>
         <div class="row">
-            {% for cluster in clusters %}
+            <!-- Creates a Card For Each Tag in Tags Object -->
+            {% for tag in tags %}
                 <div class="col-sm-4">
+                    <a href="/tag/{{tag.tag_id}}">
                     <div class="card">
-                        <h4><b>Senior Name:</b> {{cluster.senior_name}} </h4>
-                        <p><b>Senior Position:</b> ({{cluster.senior_x}}, {{cluster.senior_y}})</p>
-                        <p><b>Number of Anchors:</b> ({{cluster.num_anchors}})</p>
+                        <h4><b>Senior Name:</b> {{tag.senior_name}} </h4>
+                        <p><b>Senior Position:</b> ({{tag.senior_x}}, {{tag.senior_y}})</p>
+                        <p><b>Number of Anchors:</b> {{tag.num_anchors}}</p>
                     </div>
+                    </a>
                 </div>
             {% endfor %}
             </div>
     </div>
+    <!-- Anchors Header -->
     <div class="container section">
+        <!-- Anchors Section Header -->
         <h2 class="heading"><b>Anchors </b><a role="button" class="btn btn-secondary btn-sm" href="/createanchor">+</a></h2>
         <hr>
         <div class="row">
+            <!-- Creates a Card For Each Anchor in Anchors Object -->
             {% for anchor in anchors %}    
                     <div class="col-sm-4">
                         <div class="card">
                         <h4><b>Anchor ID:</b> {{anchor.anchor_id}}</h4>
-                        <p><b>Anchor Cluster:</b> {{anchor.cluster_id}}</p>
+                        <p><b>Anchor Tag:</b> {{anchor.tag_id}}</p>
                         <p><b>Anchor Position:</b> ({{anchor.anch_x}}, {{anchor.anch_y}})</p>
                         <p><b>Anchor Distance:</b> {{anchor.anchor_distance}}</p>
                     </div>

@@ -13,31 +13,31 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 ### Database tables ###
-# the table for a cluster of anchors and tags
-class ClusterModel(db.Model):
-   __tablename__ = "clusters"
-   cluster_id = db.Column(db.Integer, primary_key=True)
+# the table for a tag of anchors and tags
+class tagModel(db.Model):
+   __tablename__ = "tags"
+   tag_id = db.Column(db.Integer, primary_key=True)
    senior_name = db.Column(db.String(80), nullable=False)
    senior_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    senior_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    num_anchors = db.Column(db.Integer, nullable=False, default = 0)
 
    def __repr__(self):
-      return f"""Cluster(cluster_id = {self.cluster_id}, senior_name = {self.senior_name}, 
+      return f"""tag(tag_id = {self.tag_id}, senior_name = {self.senior_name}, 
       senior_x = {self.senior_x}, senior_y = {self.senior_y})"""
 
-# the table for all anchors, including which cluster they are associated with, their x and y positions,
-# and the distance to their cluster tag
+# the table for all anchors, including which tag they are associated with, their x and y positions,
+# and the distance to their tag tag
 class AnchorModel(db.Model):
    __tablename__ = "anchors"
    anchor_id = db.Column(db.Integer, primary_key = True)
-   cluster_id = db.Column(db.Integer, db.ForeignKey("clusters.cluster_id", ondelete = "CASCADE"), nullable=False)
+   tag_id = db.Column(db.Integer, db.ForeignKey("tags.tag_id", ondelete = "CASCADE"), nullable=False)
    anch_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    anch_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    anchor_distance = db.Column(db.Numeric(10,2), nullable=False, default = 0.0)
 
    def __repr__(self):
-      return f"Anchor(anchor_id = {self.anchor_id}, cluster_id = {self.cluster_id}, anch_x = {self.anch_x}, anch_y = {self.anch_y}, anchor_distance = {self.anchor_distance})"
+      return f"Anchor(anchor_id = {self.anchor_id}, tag_id = {self.tag_id}, anch_x = {self.anch_x}, anch_y = {self.anch_y}, anchor_distance = {self.anchor_distance})"
 
 # Mean Square Error
 # locations: [ (x1, y1), ... ]
@@ -50,15 +50,15 @@ def mse(x, locations, distances):
     return mse / len(distances)
 
 def update_location(anchor: AnchorModel):
-   anchorCluster = anchor.cluster_id
-   cluster = ClusterModel.query.filter_by(cluster_id=anchorCluster).first()
-   xToUpdate = float(cluster.senior_x)
-   yToUpdate = float(cluster.senior_y)
+   anchortag = anchor.tag_id
+   tag = tagModel.query.filter_by(tag_id=anchortag).first()
+   xToUpdate = float(tag.senior_x)
+   yToUpdate = float(tag.senior_y)
    
-   anchorsInCluster = AnchorModel.query.filter_by(cluster_id=anchorCluster).all()
+   anchorsIntag = AnchorModel.query.filter_by(tag_id=anchortag).all()
    locations = []
    distances = []
-   for anchors in anchorsInCluster:
+   for anchors in anchorsIntag:
       locations.append((int(anchors.anch_x), int(anchors.anch_y)))
       distances.append((float(anchors.anchor_distance)))
    
@@ -73,14 +73,14 @@ def update_location(anchor: AnchorModel):
          'maxiter': 1e+8      # Maximum iterations
       })
    
-   cluster.senior_x = result.x[0]
-   cluster.senior_y = result.x[1]
+   tag.senior_x = result.x[0]
+   tag.senior_y = result.x[1]
    db.session.commit()
    return result
 
-# Serialize data for a cluster request
-clusterFields = {
-   'cluster_id': fields.Integer,
+# Serialize data for a tag request
+tagFields = {
+   'tag_id': fields.Integer,
    'senior_name': fields.String,
    'senior_x': fields.Float,
    'senior_y': fields.Float,
@@ -90,79 +90,79 @@ clusterFields = {
 # Serialize data for a anchor request
 anchorFields = {
    'anchor_id': fields.Integer,
-   'cluster_id': fields.Integer,
+   'tag_id': fields.Integer,
    'anch_x': fields.Float,
    'anch_y': fields.Float,
    'anchor_distance': fields.Float
 }
 
-### API calls for all clusters ###
-class Clusters(Resource):
+### API calls for all tags ###
+class tags(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
    user_args.add_argument('senior_name', type=str, required=True, help="Senior name cannot be empty")
 
-   # API call to get all of the clusters
-   @marshal_with(clusterFields)
+   # API call to get all of the tags
+   @marshal_with(tagFields)
    def get(self):
-      clusters = ClusterModel.query.all()
-      return clusters
+      tags = tagModel.query.all()
+      return tags
    
-   # API call to create a new cluster for senior_name
-   @marshal_with(clusterFields)
+   # API call to create a new tag for senior_name
+   @marshal_with(tagFields)
    def post(self):
       
       args = self.user_args.parse_args()
-      cluster = ClusterModel(senior_name=args["senior_name"], 
+      tag = tagModel(senior_name=args["senior_name"], 
                              senior_x = 0, senior_y = 0, num_anchors=0)
-      db.session.add(cluster)
+      db.session.add(tag)
       db.session.commit()
-      clusters = ClusterModel().query.all()
-      return clusters, 201
+      tags = tagModel().query.all()
+      return tags, 201
 
-### API calls for a specific cluster ###
-class Cluster(Resource):
+### API calls for a specific tag ###
+class tag(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
    user_args.add_argument('senior_name', type=str, required=True, help="Senior name cannot be empty")   
-   # API call to get a specific cluster
-   @marshal_with(clusterFields)
+   # API call to get a specific tag
+   @marshal_with(tagFields)
    def get(self, id):
-      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
-      if not cluster:
-         abort(404, "Cluster not found")
-      return cluster
+      tag = tagModel.query.filter_by(tag_id=id).first()
+      if not tag:
+         abort(404, "tag not found")
+      return tag
    
-   # API call to update senior name for a specific cluster
-   @marshal_with(clusterFields)
+   # API call to update senior name for a specific tag
+   @marshal_with(tagFields)
    def patch(self, id):
       args = self.user_args.parse_args()
-      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
-      if not cluster:
-         abort(404, "Cluster not found")
-      cluster.senior_name = args["senior_name"]
+      tag = tagModel.query.filter_by(tag_id=id).first()
+      if not tag:
+         abort(404, "tag not found")
+      tag.senior_name = args["senior_name"]
       db.session.commit()
-      return cluster
+      return tag
    
-   # API call to delete a specific cluster
-   @marshal_with(clusterFields)
+   # API call to delete a specific tag
+   @marshal_with(tagFields)
    def delete(self, id):
-      cluster = ClusterModel.query.filter_by(cluster_id=id).first()
-      if not cluster:
-         abort(404, "Cluster not found")
-      db.session.delete(cluster)
+      tag = tagModel.query.filter_by(tag_id=id).first()
+      if not tag:
+         abort(404, "tag not found")
+      db.session.delete(tag)
       db.session.commit()
-      return ClusterModel.query.all(), 200
+      return tagModel.query.all(), 200
 
-# API route for updating clusters
-api.add_resource(Clusters, '/api/clusters/')
-api.add_resource(Cluster, '/api/clusters/<int:id>')
+# API route for updating tags
+api.add_resource(tags, '/api/tags/')
+api.add_resource(tag, '/api/tags/<int:id>')
 
 ### API calls for all anchors ###
 class Anchors(Resource):
    # Parse user arguments in request to API
    user_args = reqparse.RequestParser()
-   user_args.add_argument('cluster_id', type=int, required=True, help="Cluster id cannot be empty")
+   user_args.add_argument('tag_id', type=int, required=True, help="tag id cannot be empty")
    user_args.add_argument('anch_x', type=float, required=True, help="Anchor x position cannot be empty")
    user_args.add_argument('anch_y', type=float, required=True, help="Anchor y position cannot be empty")
 
@@ -172,16 +172,16 @@ class Anchors(Resource):
       anchors = AnchorModel.query.all()
       return anchors
    
-   # API call to create a new anchor for cluster_id
+   # API call to create a new anchor for tag_id
    @marshal_with(anchorFields)
    def post(self):
       args = self.user_args.parse_args()
-      cluster = ClusterModel.query.filter_by(cluster_id=args["cluster_id"]).first()
-      if not cluster:
-         abort(404, "Cluster not found")
-      anchor = AnchorModel(cluster_id=args["cluster_id"], anch_x=args["anch_x"],
+      tag = tagModel.query.filter_by(tag_id=args["tag_id"]).first()
+      if not tag:
+         abort(404, "tag not found")
+      anchor = AnchorModel(tag_id=args["tag_id"], anch_x=args["anch_x"],
                            anch_y=args["anch_y"], anchor_distance = 0)
-      cluster.num_anchors += 1
+      tag.num_anchors += 1
       db.session.add(anchor)
       db.session.commit()
       anchors = AnchorModel().query.all()
@@ -224,7 +224,7 @@ class Anchor(Resource):
    def delete(self, id):
       anchor = AnchorModel.query.filter_by(anchor_id=id).first()
       if not anchor:
-         abort(404, "Cluster not found")
+         abort(404, "tag not found")
       db.session.delete(anchor)
       db.session.commit()
       return AnchorModel.query.all(), 200
@@ -233,21 +233,27 @@ api.add_resource(Anchors, '/api/anchors/')
 api.add_resource(Anchor, '/api/anchor/<id>')
 
 # Home page route
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
-   clusters = ClusterModel.query.all()
+   tags = tagModel.query.all()
    anchors = AnchorModel.query.all()
-   print(clusters)
-   return render_template('index.html', clusters=clusters, anchors=anchors, page="home")
+   print(tags)
+   return render_template('index.html', tags=tags, anchors=anchors, page="home")
 
-@app.route('/createcluster', methods=['GET', 'POST'])
-def createcluster():
-   return render_template('createcluster.html', page="cluster")
+@app.route('/createtag', methods=['GET', 'POST'])
+def createtag():
+   return render_template('createtag.html', page="tag")
 
 @app.route('/createanchor', methods=['GET', 'POST'])
 def createanchor():
-   clusters = ClusterModel.query.all()
-   return render_template('createanchor.html', clusters=clusters, page="anchor")
+   tags = tagModel.query.all()
+   return render_template('createanchor.html', tags=tags, page="anchor")
+
+@app.route('/tag/<id>', methods=['GET'])
+def viewtag(id):
+   tag = tagModel.query.filter_by(tag_id=id).first()
+   anchors= AnchorModel.query.filter_by(tag_id=id).all()
+   return render_template('tag.html', tag=tag, anchors=anchors)
 '''
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
 # Create a socket object

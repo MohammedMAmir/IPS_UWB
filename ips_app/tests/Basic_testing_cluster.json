@@ -9,8 +9,8 @@
             "_id": "2e2936a0-c0b3-4c02-aefc-7c72b1053fd4",
             "colId": "227cb390-48c7-4e1d-a81b-7b150b567961",
             "containerId": "",
-            "name": "create_cluster",
-            "url": "http://127.0.0.1:81/api/clusters/",
+            "name": "create_tag",
+            "url": "http://127.0.0.1:81/api/tags/",
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-06-27T17:04:02.832Z",
@@ -38,7 +38,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\"cluster_id\": 1, \"anch_x\": 0, \"anch_y\": 0}",
+                "raw": "{\"tag_id\": 1, \"anch_x\": 0, \"anch_y\": 0}",
                 "form": []
             },
             "tests": []
@@ -57,7 +57,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\"cluster_id\": 1, \"anch_x\": 30, \"anch_y\": 0}",
+                "raw": "{\"tag_id\": 1, \"anch_x\": 30, \"anch_y\": 0}",
                 "form": []
             },
             "tests": []
@@ -76,7 +76,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\"cluster_id\": 1, \"anch_x\": 52, \"anch_y\": 0}",
+                "raw": "{\"tag_id\": 1, \"anch_x\": 52, \"anch_y\": 0}",
                 "form": []
             },
             "tests": [

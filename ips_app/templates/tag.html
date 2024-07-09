@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Tag {{tag.tag_id}}{% endblock %}
+
+{% block body %}
+<input type="hidden"  id="anchors" value="{{ anchors }}">
+<input type="hidden"  id="tag" value="{{ tag }}">
+<div class="main-content">
+    <div class="container section">
+        <div class="row">
+            <div class="container-fluid map-info col-sm-6">
+                <div class="card-header heading">{{tag.senior_name}}
+                </div>
+                <hr>
+                <div class="card-body">
+                    <h4>Tag ID: {{tag.tag_id}}</h4>
+                    <h4>Senior Position: ({{tag.senior_x}}, {{tag.senior_y}})</h4>
+                    <h4>Associated Anchors: {{tag.num_anchors}}</h4>
+                </div>
+            </div>
+            <div class="container map">
+                <canvas id="canvas" width="600px" height="1000px">
+                </canvas>
+            </div> 
+        </div>
+    </div>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var padding = 10;
+        var gridSize = 500;
+        var stepSize = 10;
+        var tag = document.querySelector('#tag').value;
+        var anchors = document.querySelector('#anchors').value;
+        console.log(anchors);
+        
+        function draw_grid(){
+                for(let i = 0; i < gridSize; i+=stepSize){
+                    ctx.moveTo(0.5 + i + padding, padding);
+                    ctx.lineTo(0.5 + i + padding, gridSize + padding)
+                }
+                for(let i = 0; i < gridSize; i+=stepSize){
+                    ctx.moveTo(padding, 0.5 + i + padding);
+                    ctx.lineTo(gridSize + padding, 0.5 + i + padding)
+                }
+                ctx.strokeStyle = "black"
+                ctx.stroke();
+        }
+
+        function drop_points(){
+                {%for anchor in anchors%}
+                    ctx.beginPath();
+                    ctx.arc({{anchor.anch_x}}*stepSize+10, {{anchor.anch_y}}*stepSize+10, 5, 0, 2*Math.PI);
+                    ctx.stroke();
+                {% endfor %}
+                ctx.beginPath();
+                ctx.arc({{tag.senior_x}}*stepSize + 10, {{tag.senior_y}}*stepSize + 10, 8, 0, 2*Math.PI);
+                ctx.strokeStyle = "red";
+                ctx.stroke();
+        }
+        drop_points();
+        draw_grid();
+    </script>
+</div>
+{% endblock %}

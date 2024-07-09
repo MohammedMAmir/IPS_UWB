@@ -10,6 +10,7 @@
 
 .heading{
     margin-top: 25px;
+    font-size: 2rem;
 }
 
 body{
@@ -43,4 +44,41 @@ hr{
 
 .form-group{
     padding: 10px;
+}
+
+.map{
+    min-width: 500px;
+    width: 400px;
+    margin-top: 5%
+}
+
+
+
+.wrapper{
+    display: grid;
+    grid-template-columns: repeat(50, 10px);
+    grid-template-rows: repeat(50, 10px);
+    padding: 0;
+}
+
+.map-info{
+    margin-top: 5%;
+}
+
+.mapper{
+    margin-top: 5%;
+}
+
+.col-sm-4 a{
+    text-decoration: none;
+    color: black;
+}
+
+a:hover{
+    color: black;
+}
+
+a .card:hover{
+    background-color: #eecccc;
+    transform: scale(1.05);
 }

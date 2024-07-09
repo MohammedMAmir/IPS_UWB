@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Create a Cluster{% endblock %}
+{% block title %}Create a Tag{% endblock %}
 
 {% block body %}
 <div class="main-content">
     <div class="container section">
-        <form id="createcluster">
+        <form id="createtag">
             <div class="card">
-                <div class="card-header">Create a New Cluster
+                <div class="card-header">Create a New Tag
                 </div>
                 <div class="form-group">
                     <label for="senior_name">Senior Name:</label>
@@ -36,7 +36,7 @@
     function postRequest(data){
         $.ajax({
              type: "POST",
-             url: "/api/clusters",
+             url: "/api/tags",
              data: JSON.stringify(data),// now data come in this function
              contentType: "application/json; charset=utf-8",
              crossDomain: true,
