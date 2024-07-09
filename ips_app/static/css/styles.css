@@ -80,3 +80,20 @@ a .card:hover{
     background-color: #eecccc;
     transform: scale(1.05);
 }
+
+.garbage{
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    padding: 0;
+    background-color: #994444;
+    border-color: #994444;
+}
+
+.card:hover .garbage{
+    display: block;
+}

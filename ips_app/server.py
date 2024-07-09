@@ -143,7 +143,6 @@ class tags(Resource):
       return tags, 201
 
 
-
 ### API calls for a specific tag ###
 class tag(Resource):
    # Parse user arguments in request to API
