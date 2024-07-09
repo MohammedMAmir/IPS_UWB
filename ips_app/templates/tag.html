@@ -3,11 +3,12 @@
 {% block title %}Tag {{tag.tag_id}}{% endblock %}
 
 {% block body %}
-<input type="hidden"  id="anchors" value="{{ anchors }}">
-<input type="hidden"  id="tag" value="{{ tag }}">
+<!-- Main Content -->
 <div class="main-content">
+    <!-- Main Content Container -->
     <div class="container section">
         <div class="row">
+            <!-- Info About the Tag -->
             <div class="container-fluid map-info col-sm-6">
                 <div class="card-header heading">{{tag.senior_name}}
                 </div>
@@ -18,6 +19,7 @@
                     <h4>Associated Anchors: {{tag.num_anchors}}</h4>
                 </div>
             </div>
+            <!-- Map for the Tag and It's Anchors -->
             <div class="container map">
                 <canvas id="canvas" width="600px" height="1000px">
                 </canvas>
@@ -25,15 +27,23 @@
         </div>
     </div>
     <script>
+        // Get the canvas element by id
         var canvas = document.getElementById("canvas");
+
+        // Create a canvas drawing tool
         var ctx = canvas.getContext("2d");
-        var padding = 10;
-        var gridSize = 500;
-        var stepSize = 10;
-        var tag = document.querySelector('#tag').value;
-        var anchors = document.querySelector('#anchors').value;
-        console.log(anchors);
         
+        // Canvas Padding
+        var padding = 10;
+        // Full Grid Size
+        var gridSize = 500;
+        // Step Size of Each Cell
+        var stepSize = 10;
+        //var tag = document.querySelector('#tag').value;
+        //var anchors = document.querySelector('#anchors').value;
+        //console.log(anchors);
+        
+        // Draw the Grid
         function draw_grid(){
                 for(let i = 0; i < gridSize; i+=stepSize){
                     ctx.moveTo(0.5 + i + padding, padding);
@@ -47,17 +57,23 @@
                 ctx.stroke();
         }
 
+        // Put the Anchor and Tag Locations on the Grid
         function drop_points(){
+                // For Each Anchor in the List of Anchors, Draw a Circle at it's Location
                 {%for anchor in anchors%}
                     ctx.beginPath();
                     ctx.arc({{anchor.anch_x}}*stepSize+10, {{anchor.anch_y}}*stepSize+10, 5, 0, 2*Math.PI);
                     ctx.stroke();
                 {% endfor %}
+
+                // For the Tag, Draw a Circle at it's Location
                 ctx.beginPath();
                 ctx.arc({{tag.senior_x}}*stepSize + 10, {{tag.senior_y}}*stepSize + 10, 8, 0, 2*Math.PI);
                 ctx.strokeStyle = "red";
                 ctx.stroke();
         }
+
+        // Call the Functions to Draw the Grid and Add the Points
         drop_points();
         draw_grid();
     </script>
