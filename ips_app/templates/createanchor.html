@@ -3,14 +3,18 @@
 {% block title %}Create an Anchor{% endblock %}
 
 {% block body %}
+<!-- Main Content -->
 <div class="main-content">
     <div class="container section">
+        <!-- Form to Create an Anchor -->
         <form id="createcanchor">
             <div class="card">
                 <div class="card-header">Create a New Anchor
                 </div>
+                <!-- Anchor Tag Section -->
                 <div class="form-group">
                     <label for="tag_id" class="col-sm-2">Anchor Tag:</label>
+                    <!-- Choose Tag from One of the Existing Tags Pulled from DB -->
                     <select class="custom-select mr-sm-4" id="tag_id" name="tag_id">
                         <option selected>Choose...</option>
                         {% for tag in tags %}
@@ -18,21 +22,25 @@
                         {% endfor %}
                     </select>
                 </div>
+                <!-- Anchor Position Section -->
                 <div class="form-group">
                     <label for="anch_x_y">Anchor Postion:</label>
                     <div class="row">
                         <div class="col-sm-4">
+                            <!-- Input Anchor X -->
                             <label for="anch_x" class="col-sm-6 col-form-label">Anchor X:  </label>
                             <input type="number" id="anch_x" name="anch_x" placeholder="0.00" step="0.01"
                             class="col-sm-4"></input>
                         </div>
                         <div class="col-sm-4">
+                            <!-- Input Anchor Y -->
                             <label for="anch_y" class="col-sm-6 col-form-label">Anchor Y:  </label>
                             <input type="number" id="anch_y" name="anch_y" placeholder="0.00" step="0.01"
                             class="col-sm-4"></input>
                         </div> 
                     </div>
                 </div>
+                <!-- Submit Button -->
                 <button type="submit" class="btn btn-outline-danger alert-danger"><b>Submit</b></button>
             </div> 
         </form>
@@ -42,13 +50,16 @@
     function handleSubmit(event) {
         event.preventDefault();
 
+        // Grab data from our form
         const data = new FormData(event.target);
 
         // Do a bit of work to convert the entries to a plain JS object
         const value = Object.fromEntries(data.entries());
 
-        console.log(value);
+        // Create a message to send to our database
         var body = {tag_id: value.tag_id, anch_x: value.anch_x, anch_y: value.anch_y};
+
+        // Send message
         postRequest(body);
     }
 
@@ -72,6 +83,8 @@
              }
           });
     }
+
+    // Attach our functions to our submit button
     const form = document.querySelector('form');
     form.addEventListener('submit', handleSubmit);
 </script>
