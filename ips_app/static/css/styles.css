@@ -52,8 +52,6 @@ hr{
     margin-top: 5%
 }
 
-
-
 .wrapper{
     display: grid;
     grid-template-columns: repeat(50, 10px);

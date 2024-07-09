@@ -6,20 +6,31 @@ from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 import math
 from scipy.optimize import minimize            
 
+
+
 ### Setup ###
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 api = Api(app)
 
+
+
 ### Database tables ###
 # the table for a tag of anchors and tags
 class tagModel(db.Model):
    __tablename__ = "tags"
+   # Unique id that identifies each tag, autoincrements
    tag_id = db.Column(db.Integer, primary_key=True)
+   
+   # The senior this tag identifies
    senior_name = db.Column(db.String(80), nullable=False)
+   
+   # The senior's x and y positions, updated every time an anchor updates it's distance
    senior_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    senior_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
+   
+   # The number of anchors associated with this tag
    num_anchors = db.Column(db.Integer, nullable=False, default = 0)
 
    def __repr__(self):
@@ -30,10 +41,17 @@ class tagModel(db.Model):
 # and the distance to their tag tag
 class AnchorModel(db.Model):
    __tablename__ = "anchors"
+   # Unique id that identifies each tag, autoincrements
    anchor_id = db.Column(db.Integer, primary_key = True)
+
+   # The tag this anchor is associated with
    tag_id = db.Column(db.Integer, db.ForeignKey("tags.tag_id", ondelete = "CASCADE"), nullable=False)
+
+   # The anchor's fixed x and y positions
    anch_x = db.Column(db.Numeric(10,2), nullable=False, default = 0)
    anch_y = db.Column(db.Numeric(10,2), nullable=False, default = 0)
+
+   # The distance between the anchor and it's tag, updated by anchor
    anchor_distance = db.Column(db.Numeric(10,2), nullable=False, default = 0.0)
 
    def __repr__(self):
@@ -49,6 +67,8 @@ def mse(x, locations, distances):
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
 
+# Used to calculate location of tag using anchor distances as specified by:
+# https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
 def update_location(anchor: AnchorModel):
    anchortag = anchor.tag_id
    tag = tagModel.query.filter_by(tag_id=anchortag).first()
@@ -96,6 +116,8 @@ anchorFields = {
    'anchor_distance': fields.Float
 }
 
+
+
 ### API calls for all tags ###
 class tags(Resource):
    # Parse user arguments in request to API
@@ -119,6 +141,8 @@ class tags(Resource):
       db.session.commit()
       tags = tagModel().query.all()
       return tags, 201
+
+
 
 ### API calls for a specific tag ###
 class tag(Resource):
@@ -157,6 +181,8 @@ class tag(Resource):
 # API route for updating tags
 api.add_resource(tags, '/api/tags/')
 api.add_resource(tag, '/api/tags/<int:id>')
+
+
 
 ### API calls for all anchors ###
 class Anchors(Resource):
@@ -232,50 +258,38 @@ class Anchor(Resource):
 api.add_resource(Anchors, '/api/anchors/')
 api.add_resource(Anchor, '/api/anchor/<id>')
 
-# Home page route
+
+
+# Route to Home Page
 @app.route('/', methods=['GET'])
 def home():
    tags = tagModel.query.all()
    anchors = AnchorModel.query.all()
    print(tags)
+   # Send all the tags, all of the anchors, and the Home Page
    return render_template('index.html', tags=tags, anchors=anchors, page="home")
 
+# Route to Create a Tag Page
 @app.route('/createtag', methods=['GET', 'POST'])
 def createtag():
+   # Send the create a tag page
    return render_template('createtag.html', page="tag")
 
+# Route to Create an Anchor Page
 @app.route('/createanchor', methods=['GET', 'POST'])
 def createanchor():
+   # Send the create an anchor page and all of the current tags that exist in the db
    tags = tagModel.query.all()
    return render_template('createanchor.html', tags=tags, page="anchor")
 
+# Route to Visualize a Specific Tag
 @app.route('/tag/<id>', methods=['GET'])
 def viewtag(id):
    tag = tagModel.query.filter_by(tag_id=id).first()
    anchors= AnchorModel.query.filter_by(tag_id=id).all()
+   # Send the tag page, the current tag, and all of the anchors for that tag
    return render_template('tag.html', tag=tag, anchors=anchors)
-'''
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
-# Create a socket object
-host = socket.gethostname()
-network = socket.gethostbyname(host)
-# Get local machine name
-port = 3306                
-# Reserve a port for your service.
-s.bind((host, port))        
-# Bind to the port
-s.listen(0)
-# Listening on:
-print("listening on:", network, " port: ", port)
-# Now wait for client connection.
-while True:
-   c, addr = s.accept()     
-# Establish connection with client.
-   print('Got connection from', addr)
-   c.send('Thank you for connecting')
-   c.close()                
-# Output the message and Close the connection
-'''   
+
 
 # Run the app
 if __name__ == '__main__':
