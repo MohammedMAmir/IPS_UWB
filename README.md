@@ -48,26 +48,31 @@ The database currently contains two tables:
         1) tag_id (integer)
             * A unique id that identifies each tag
             * Autoincrements anytime a new tag is added
-        3) senior_name (string)
+              
+        2) senior_name (string)
             * The senior this tag identifies
-        4) senior_x (float)
+              
+        3) senior_x (float)
             * The current x position of the tag
-        5) senior_y
+              
+        4) senior_y
             * The current y position of the tag
-        6) num_anchors
+              
+        5) num_anchors
             * The number of anchors associate with this tag
-1) Anchors:
+              
+2) Anchors:
     * each anchor has 5 fields:
         1) anchor_id (integer)
-                     *A unique id that identifies each anchor
-                     *Autoincrements anytime a new anchor is added
+            * A unique id that identifies each anchor
+            * Autoincrements anytime a new anchor is added
         2) tag_id (integer):
-                     *The tag that this anchor is associated with
-                     *There must be a valid tag in the tag table for this to reference
+            * The tag that this anchor is associated with
+            * There must be a valid tag in the tag table for this to reference
         3) anch_x (float):
-                     *The fixed x position of the anchor in its coordinate space
+            * The fixed x position of the anchor in its coordinate space
         4) anch_y (float):
-                     *The fixed y position of the anchor in its coordiante space
+            * The fixed y position of the anchor in its coordiante space
 
 ### Calling the API ###
 
