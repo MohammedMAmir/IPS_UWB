@@ -43,20 +43,20 @@ Running the server for this project is as simple as running the server script
 
 ### Using the Database ###
 The database currently contains two tables:
-* Tags:
-     * each tag has 5 fields:
-                 1) tag_id (integer)
-                     *A unique id that identifies each tag
-                     *Autoincrements anytime a new tag is added
-                 2) senior_name (string)
-                     *The senior this tag identifies
-                 3) senior_x (float)
-                     *The current x position of the tag
-                 4) senior_y
-                     *The current y position of the tag
-                 5) num_anchors
-                     *The number of anchors associate with this tag
-* Anchors:
+1) Tags:
+    * each tag has 5 fields:
+        1) tag_id (integer)
+            * A unique id that identifies each tag
+            * Autoincrements anytime a new tag is added
+        3) senior_name (string)
+            * The senior this tag identifies
+        4) senior_x (float)
+            * The current x position of the tag
+        5) senior_y
+            * The current y position of the tag
+        6) num_anchors
+            * The number of anchors associate with this tag
+1) Anchors:
     * each anchor has 5 fields:
         1) anchor_id (integer)
                      *A unique id that identifies each anchor
