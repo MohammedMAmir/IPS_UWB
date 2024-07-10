@@ -44,7 +44,7 @@ Running the server for this project is as simple as running the server script
 ### Using the Database ###
 The database currently contains two tables:
 
-####*__Tags:__*####
+#### Tags: ####
 
 Each tag has 5 fields:
   1) tag_id (integer)
@@ -63,7 +63,7 @@ Each tag has 5 fields:
   5) num_anchors
       * The number of anchors associate with this tag
               
-####*__Anchors:__*####
+#### Anchors: ####
 
 Each anchor has 5 fields:
   1) anchor_id (integer)
