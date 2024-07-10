@@ -61,10 +61,22 @@ Now you're ready to start the server!
 ## Running the Server ##
 
 Running the server for this project is as simple as running the server script
-- Open a terminal window and navigate to the ips_app folder using "cd /path/to/folder/IPS_UWB"
-- Start up your virtual environment using "source .venv/Scripts/activate" 
-- Once the virtual environment is running, navigate into the ips_app folder using "cd ips_app"
-- Once in the ips_app folder, use the command "python3 -m server" to start the server
+- Open a terminal window and navigate to the ips_app folder using
+  ```bash
+  cd /path/to/folder/IPS_UWB
+  ```
+- Start up your virtual environment using
+  ```bash
+  source .venv/Scripts/activate
+  ``` 
+- Once the virtual environment is running, navigate into the ips_app folder using
+  ```bash
+  cd ips_app
+  ```
+- Once in the ips_app folder, to start the server, use the command
+  ```bash
+  python3 -m server
+  ```
 - You should get a message that the server is running on 127.0.0.1:81. You can now type https://127.0.0.1:81 into any browser to view the server responses
 
 ## Using the Database ##
@@ -115,7 +127,9 @@ The api for the project can be used to query and update the database. It is brok
     - Request takes no parameters and returns a list of all of the tags currently stored in the database
   - POST:
     - Request takes a post request with the following JSON message body:
-       - {"senior_name": "[some senior name]"}
+      ```JSON
+      {"senior_name": "[some senior name]"}
+      ```
     - The corresponding tag will be created in the database with a unique tag ID and initial senior x and y position of (0, 0)
     - The request will return a list of all the tags in the database
    
@@ -124,7 +138,9 @@ The api for the project can be used to query and update the database. It is brok
     - Request takes no parameters and returns a list of all of the anchors currently stored in the database
   - POST: 
     - Request takes a post request with the following JSON message body:
-        - {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
+      ```JSON
+      {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
+      ```
     - The corresponding anchor attached to the specified tag will be created in the database with a unique anchor Id and anchor x and y positions specified
 
 
