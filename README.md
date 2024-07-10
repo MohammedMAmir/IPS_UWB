@@ -36,11 +36,27 @@ python3  pip install virtualenv
 ```bash
 python3 -m venv .venv
 ```
-    - This will create a virtual environment folder that lets you import all the dependencies of the project without overriding dependency versions already installed on your device.
-- To activate the virtual environment use the command "source .venv/Scripts/activate" in your terminal window. You will need to do this everytime you open a new terminal and want to run the server.
-- Navigate into the "ips_app" folder using the command "cd ips_app" in the terminal window
-- Finally, enter the command "python3 -m install -r requirements.txt" to install all of the modules used by the project
-- Wait for all of the modules to install and if an error occurs or a module is missing, just install it manually using the command "python3 -m pip install [missing module]" (where missing module is replaced by whatever module triggered the error and is missing)
+This will create a virtual environment folder that lets you import all the dependencies of the project without overriding dependency versions already installed on your device.
+- To activate the virtual environment use the command
+```bash
+source .venv/Scripts/activate
+```
+in your terminal window. You will need to do this everytime you open a new terminal and want to run the server.
+- Navigate into the "ips_app" folder using the command
+```bash
+cd ips_app
+```
+in the terminal window
+- Finally, install all of the modules used by the project by entering the command
+```bash
+python3 -m install -r requirements.txt
+```
+- Wait for all of the modules to install
+    - if an error occurs or a module is missing, just install it manually using the command
+      ```bash
+      python3 -m pip install [missing module]
+      ```
+      (where missing module is replaced by whatever module triggered the error and is missing)
 
 Now you're ready to start the server!
 
