@@ -37,5 +37,7 @@ Running the server for this project is as simple as running the server script
 
 ### Calling the API ###
 
-The api for the project is broken down into 4 parts and can be used to update the database. Although all the functionalities of the API can be accessed through website dashboard, they can also be accessed using HTTP GET/POST requests. The API is broken down as follows:
+The api for the project can be used to query and update the database. It is broken down into 4 parts. Although all of the functionalities of the API can be accessed through website dashboard, they can also be accessed using HTTP GET/POST requests and therefore, from anchors and tags. The API is broken down as follows:
+
+
 
