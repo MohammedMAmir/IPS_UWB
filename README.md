@@ -123,6 +123,7 @@ Each anchor has 5 fields:
 The api for the project can be used to query and update the database. It is broken down into 4 parts. Although all of the functionalities of the API can be accessed through website dashboard, they can also be accessed using HTTP GET/POST requests and therefore, from anchors and tags. The API is broken down as follows:
 
 - Tags (available at the url: https://127.0.0.1:81/api/tags)
+
 [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]:
   - GET:
     - Request takes no parameters and returns a list of all of the tags currently stored in the database
@@ -135,6 +136,7 @@ The api for the project can be used to query and update the database. It is brok
     - The request will return a list of all the tags in the database
    
 - Anchors (available at the url: https://127.0.0.1:81/api/anchors)
+
 [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]:
   - GET:
     - Request takes no parameters and returns a list of all of the anchors currently stored in the database
