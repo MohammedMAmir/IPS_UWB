@@ -17,13 +17,26 @@ The following requirements must be satisfied to be able to run the IPS UWB serve
 ### Setup ###
 
 Once you have git and python installed, you may clone this repository:
-- Open a terminal window on your device and type "git clone https://github.com/MohammedMAmir/IPS_UWB.git"
+- Open a terminal window on your device and use 
+```bash
+git clone https://github.com/MohammedMAmir/IPS_UWB.git"
+```
 - The project folders should be cloned onto your device
-- Type "cd IPS_UWB" to navigate to the project folder
+- Use the following command to navigate to the project folder
+```bash
+cd IPS_UWB
+```
 
 Now you can setup all the dependencies for the project:
-- In your terminal window, inside the IPS_UWB folder, type "python3  pip install virtualenv".
-- Once the installation is finished, type "python3 -m venv .venv". This will create a virtual environment folder that lets you import all the dependencies of the project without overriding dependency versions already installed on your device.
+- In your terminal window, inside the IPS_UWB folder, enter
+```bash
+python3  pip install virtualenv
+```
+- Once the installation is finished, use
+```bash
+python3 -m venv .venv
+```
+    - This will create a virtual environment folder that lets you import all the dependencies of the project without overriding dependency versions already installed on your device.
 - To activate the virtual environment use the command "source .venv/Scripts/activate" in your terminal window. You will need to do this everytime you open a new terminal and want to run the server.
 - Navigate into the "ips_app" folder using the command "cd ips_app" in the terminal window
 - Finally, enter the command "python3 -m install -r requirements.txt" to install all of the modules used by the project
