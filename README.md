@@ -56,17 +56,17 @@ The database currently contains two tables:
                      *The current y position of the tag
                  5) num_anchors
                      *The number of anchors associate with this tag
-  * Anchors:
-      * each anchor has 5 fields:
-               1) anchor_id (integer)
+* Anchors:
+    * each anchor has 5 fields:
+        1) anchor_id (integer)
                      *A unique id that identifies each anchor
                      *Autoincrements anytime a new anchor is added
-               2) tag_id (integer):
+        2) tag_id (integer):
                      *The tag that this anchor is associated with
                      *There must be a valid tag in the tag table for this to reference
-               3) anch_x (float):
+        3) anch_x (float):
                      *The fixed x position of the anchor in its coordinate space
-               4) anch_y (float):
+        4) anch_y (float):
                      *The fixed y position of the anchor in its coordiante space
 
 ### Calling the API ###
