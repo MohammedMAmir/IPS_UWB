@@ -34,3 +34,8 @@ Running the server for this project is as simple as running the server script
 - Once the virtual environment is running, navigate into the ips_app folder using "cd ips_app"
 - Once in the ips_app folder, use the command "python3 -m server" to start the server
 - You should get a message that the server is running on 127.0.0.1:81. You can now type https://127.0.0.1:81 into any browser to view the server responses
+
+### Calling the API ###
+
+The api for the project is broken down into 4 parts and can be used to update the database. Although all the functionalities of the API can be accessed through website dashboard, they can also be accessed using HTTP GET/POST requests. The API is broken down as follows:
+
