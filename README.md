@@ -89,7 +89,7 @@ The api for the project can be used to query and update the database. It is brok
     - Request takes no parameters and returns a list of all of the tags currently stored in the database
   - POST:
     - Request takes a post request with the following JSON message body:
-        {"senior_name": "[some senior name]"}
+       - {"senior_name": "[some senior name]"}
     - The corresponding tag will be created in the database with a unique tag ID and initial senior x and y position of (0, 0)
     - The request will return a list of all the tags in the database
    
@@ -98,7 +98,7 @@ The api for the project can be used to query and update the database. It is brok
     - Request takes no parameters and returns a list of all of the anchors currently stored in the database
   - POST: 
     - Request takes a post request with the following JSON message body:
-        {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
+        - {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
     - The corresponding anchor attached to the specified tag will be created in the database with a unique anchor Id and anchor x and y positions specified
 
 
