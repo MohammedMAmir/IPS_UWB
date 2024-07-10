@@ -43,39 +43,39 @@ Running the server for this project is as simple as running the server script
 
 ### Using the Database ###
 The database currently contains two tables:
-- Tags:
+__Tags:__
 Each tag has 5 fields:
-    1) tag_id (integer)
-        * A unique id that identifies each tag
-        * Autoincrements anytime a new tag is added
+  1) tag_id (integer)
+      * A unique id that identifies each tag
+      * Autoincrements anytime a new tag is added
+            
+  2) senior_name (string)
+      * The senior this tag identifies
+            
+  3) senior_x (float)
+      * The current x position of the tag
+            
+  4) senior_y
+      * The current y position of the tag
+            
+  5) num_anchors
+      * The number of anchors associate with this tag
               
-    2) senior_name (string)
-        * The senior this tag identifies
-              
-    3) senior_x (float)
-        * The current x position of the tag
-              
-    4) senior_y
-        * The current y position of the tag
-              
-    5) num_anchors
-        * The number of anchors associate with this tag
-              
-- Anchors:
+__Anchors:__
 Each anchor has 5 fields:
-    1) anchor_id (integer)
-        * A unique id that identifies each anchor
-        * Autoincrements anytime a new anchor is added
-              
-    2) tag_id (integer):
-        * The tag that this anchor is associated with
-        * There must be a valid tag in the tag table for this to reference
-              
-    3) anch_x (float):
-        * The fixed x position of the anchor in its coordinate space
-              
-    4) anch_y (float):
-        * The fixed y position of the anchor in its coordiante space
+  1) anchor_id (integer)
+      * A unique id that identifies each anchor
+      * Autoincrements anytime a new anchor is added
+            
+  2) tag_id (integer):
+      * The tag that this anchor is associated with
+      * There must be a valid tag in the tag table for this to reference
+            
+  3) anch_x (float):
+      * The fixed x position of the anchor in its coordinate space
+            
+  4) anch_y (float):
+      * The fixed y position of the anchor in its coordiante space
 
 ### Calling the API ###
 
