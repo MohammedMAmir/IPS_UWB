@@ -1,8 +1,6 @@
 # Indoor Positioning Ultra-Wide Band Server (IPS UWB)
 
-## Installations and Setup ###
-
-### Installations ###
+## Requirements ##
 
 The following requirements must be satisfied to be able to run the IPS UWB server. 
 - Git: Download and install git on your device from the following link https://git-scm.com/downloads
@@ -14,7 +12,7 @@ The following requirements must be satisfied to be able to run the IPS UWB serve
   ![alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmzRIlwA0USenF0Ad9inIYjcd-hfD76p8JA&s)
   
 
-### Setup ###
+## Installation & Setup ##
 
 Once you have git and python installed, you may clone this repository:
 - Open a terminal window on your device and use 
@@ -60,8 +58,7 @@ python3 -m install -r requirements.txt
 
 Now you're ready to start the server!
 
-## Usage ##
-### Running the Server ###
+## Running the Server ##
 
 Running the server for this project is as simple as running the server script
 - Open a terminal window and navigate to the ips_app folder using "cd /path/to/folder/IPS_UWB"
@@ -70,10 +67,10 @@ Running the server for this project is as simple as running the server script
 - Once in the ips_app folder, use the command "python3 -m server" to start the server
 - You should get a message that the server is running on 127.0.0.1:81. You can now type https://127.0.0.1:81 into any browser to view the server responses
 
-### Using the Database ###
+## Using the Database ##
 The database currently contains two tables:
 
-#### Tags: ####
+### Tags: ###
 
 Each tag has 5 fields:
   1) tag_id (integer)
@@ -92,7 +89,7 @@ Each tag has 5 fields:
   5) num_anchors
       * The number of anchors associate with this tag
               
-#### Anchors: ####
+### Anchors: ###
 
 Each anchor has 5 fields:
   1) anchor_id (integer)
@@ -109,7 +106,7 @@ Each anchor has 5 fields:
   4) anch_y (float):
       * The fixed y position of the anchor in its coordiante space
 
-### Calling the API ###
+## Calling the API ##
 
 The api for the project can be used to query and update the database. It is broken down into 4 parts. Although all of the functionalities of the API can be accessed through website dashboard, they can also be accessed using HTTP GET/POST requests and therefore, from anchors and tags. The API is broken down as follows:
 
