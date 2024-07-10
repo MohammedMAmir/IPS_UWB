@@ -82,6 +82,8 @@ Running the server for this project is as simple as running the server script
   ```
 - You should get a message that the server is running on 127.0.0.1:81. You can now type https://127.0.0.1:81 into any browser to view the server responses
 
+--- 
+
 ## Using the Database ##
 The database currently contains two tables:
 
@@ -154,6 +156,32 @@ The api for the project can be used to query and update the database. It is brok
            {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
            ```
             - The corresponding anchor attached to the specified tag will be created in the database with a unique anchor ID and anchor x and y positions specified
-- Tag
+- Tag (available at the url: https://127.0.0.1:81/api/tag/<id>)
+    * Used to get, update, and delete information about tag with tag_id = id
+    * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
+    * Endpoints:
+        - GET
+            - Request takes no parameters and returns the tag in the url if it is stored in the database
+        - PATCH:
+            - Request makes a patch request with the following JSON message body:
+              ```JSON
+              {"senior_name": "[some senior name]"}
+              ```
+            - The senior name of the tag in the url will then be updated to instead be registered to the senior name specificed in the request
+        - DELETE:
+            - Request takes no parameters and deletes the tag that in the url if it is stored in the database
+- Anchor (available at the url: https://127.0.0.1:81/api/anchor/<id>)
+    * Used to get, update, and delete information about tag with anchor_id = id
+    * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
+    * Endpoints
+        - GET
+            - Request takes no parameters and returns the anchor in the url if it is stored in the database 
+        - PATCH
+            - Request makes a patch request with the following JSON message body:
+               Request makes a patch request with the following JSON message body:
+              ```JSON
+              {"anchor_distance": "[the anchor's updated distance from itself to it's tag]"} OR {"anchor_distance:" "[the anchor's updated distance from itself to it's tag], "}
+              ```
+        - DELETE
 
 
