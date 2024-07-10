@@ -11,6 +11,7 @@ The following requirements must be satisfied to be able to run the IPS UWB serve
   
   ![alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmzRIlwA0USenF0Ad9inIYjcd-hfD76p8JA&s)
   
+---  
 
 ## Installation & Setup ##
 
@@ -57,6 +58,8 @@ python3 -m install -r requirements.txt
       (where missing module is replaced by whatever module triggered the error and is missing)
 
 Now you're ready to start the server!
+
+--- 
 
 ## Running the Server ##
 
@@ -117,6 +120,8 @@ Each anchor has 5 fields:
             
   4) anch_y (float):
       * The fixed y position of the anchor in its coordiante space
+
+--- 
 
 ## Calling the API ##
 
