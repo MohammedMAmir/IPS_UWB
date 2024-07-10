@@ -66,11 +66,14 @@ The database currently contains two tables:
         1) anchor_id (integer)
             * A unique id that identifies each anchor
             * Autoincrements anytime a new anchor is added
+              
         2) tag_id (integer):
             * The tag that this anchor is associated with
             * There must be a valid tag in the tag table for this to reference
+              
         3) anch_x (float):
             * The fixed x position of the anchor in its coordinate space
+              
         4) anch_y (float):
             * The fixed y position of the anchor in its coordiante space
 
