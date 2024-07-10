@@ -6,9 +6,10 @@
 
 The following requirements must be satisfied to be able to run the IPS UWB server. 
 - Git: Download and install git on your device from the following link https://git-scm.com/downloads
-  ![atl text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPteWfILDHmk0RbbZao7PgFtDvdueIFX0LuQ&s)
+  ![alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPteWfILDHmk0RbbZao7PgFtDvdueIFX0LuQ&s)
   
 - Python: You must also have python installed. Please consult this tutorial to install Python and add it to the environment variables on your device https://www.digitalocean.com/community/tutorials/install-python-windows-10
+  ![alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStmzRIlwA0USenF0Ad9inIYjcd-hfD76p8JA&s)
 
 ### Setup ###
 
