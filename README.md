@@ -45,6 +45,7 @@ Running the server for this project is as simple as running the server script
 The database currently contains two tables:
 
 *__Tags:__*
+
 Each tag has 5 fields:
   1) tag_id (integer)
       * A unique id that identifies each tag
@@ -63,6 +64,7 @@ Each tag has 5 fields:
       * The number of anchors associate with this tag
               
 *__Anchors:__*
+
 Each anchor has 5 fields:
   1) anchor_id (integer)
       * A unique id that identifies each anchor
