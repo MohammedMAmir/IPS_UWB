@@ -89,10 +89,11 @@ The database currently contains two tables:
 
 | tag_id | senior_name | senior_x | senior_ y | num_anchors |
 |--------|-------------|----------|-----------|-------------|
+|        |             |          |           |             |
 
 | anchor_id | tag_id | anch_x | anch_ y | anchor_distance |
 |-----------|--------|--------|---------|-----------------|
-
+|           |        |        |         |                 |
 ### Tags: ###
 
 Each tag has 5 fields:
@@ -128,6 +129,10 @@ Each anchor has 5 fields:
             
   4) anch_y (float):
       * The fixed y position of the anchor in its coordiante space
+  
+  5) anchor_distance (float):
+      * The distance from the anchor to it's corresponding tag
+      * Updated by the anchors using a PATCH request
 
 --- 
 
@@ -166,7 +171,7 @@ The api for the project can be used to query and update the database. It is brok
     * Used to get, update, and delete information about tag with tag_id = id
     * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
     * Endpoints:
-        - GET
+        - GET:
             - Request takes no parameters and returns the tag in the url if it is stored in the database
         - PATCH:
             - Request makes a patch request with the following JSON message body:
@@ -176,18 +181,67 @@ The api for the project can be used to query and update the database. It is brok
             - The senior name of the tag in the url will then be updated to instead be registered to the senior name specificed in the request
         - DELETE:
             - Request takes no parameters and deletes the tag that in the url if it is stored in the database
+            - If the tag has corresponding anchors attached to it, they will also be deleted from the database
 - Anchor (available at the url: https://127.0.0.1:81/api/anchor/<id>)
     * Used to get, update, and delete information about tag with anchor_id = id
     * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
     * Endpoints
-        - GET
+        - GET:
             - Request takes no parameters and returns the anchor in the url if it is stored in the database 
-        - PATCH
+        - PATCH:
             - Request makes a patch request with the following JSON message body:
                Request makes a patch request with the following JSON message body:
               ```JSON
               {"anchor_distance": "[the anchor's updated distance from itself to it's tag]"} OR {"anchor_distance:" "[the anchor's updated distance from itself to it's tag], "}
               ```
-        - DELETE
+        - DELETE:
+            - Request takes no parameters and deletes the anchor with the anchor_id specified in the url if it is stored in the database
+
+---
+## Positioning Calculation ##
+The positioning algorithm is called everytime that an anchor makes a PATCH request to the database. Specifically, everytime an anchor updates the distance to its associated anchor, the following two functions are called by the server to calcualate the new position of the tag:
+```Python
+# Mean Square Error
+# locations: [ (x1, y1), ... ]
+# distances: [ distance1, ... ]
+def mse(x, locations, distances):
+    mse = 0.0
+    for location, distance in zip(locations, distances):
+        distance_calculated = math.dist(x, location)
+        mse += math.pow(distance_calculated - distance, 2.0)
+    return mse / len(distances)
+
+# Used to calculate location of tag using anchor distances as specified by:
+# https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
+def update_location(anchor: AnchorModel):
+   anchortag = anchor.tag_id
+   tag = tagModel.query.filter_by(tag_id=anchortag).first()
+   xToUpdate = float(tag.senior_x)
+   yToUpdate = float(tag.senior_y)
+   
+   anchorsIntag = AnchorModel.query.filter_by(tag_id=anchortag).all()
+   locations = []
+   distances = []
+   for anchors in anchorsIntag:
+      locations.append((int(anchors.anch_x), int(anchors.anch_y)))
+      distances.append((float(anchors.anchor_distance)))
+   
+   initial_guess = (xToUpdate, yToUpdate)
+   result = minimize(
+      mse,                         # The error function
+      initial_guess,            # The initial guess
+      args=(locations, distances), # Additional parameters for mse
+      method='L-BFGS-B',           # The optimisation algorithm
+      options={
+         'ftol':1e-2,         # Tolerance
+         'maxiter': 1e+8      # Maximum iterations
+      })
+   
+   tag.senior_x = result.x[0]
+   tag.senior_y = result.x[1]
+   db.session.commit()
+   return result
+```
+
 
 
