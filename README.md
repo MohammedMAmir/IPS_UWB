@@ -87,6 +87,12 @@ Running the server for this project is as simple as running the server script
 ## Using the Database ##
 The database currently contains two tables:
 
+| tag_id | senior_name | senior_x | senior_ y | num_anchors |
+|--------|-------------|----------|-----------|-------------|
+
+| anchor_id | tag_id | anch_x | anch_ y | anchor_distance |
+|-----------|--------|--------|---------|-----------------|
+
 ### Tags: ###
 
 Each tag has 5 fields:
