@@ -234,9 +234,10 @@ def mse(x, locations, distances):
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
 ```
-What’s left now is to find the point x that minimises the mean square error. Luckily, scipy comes with several optimisation algorithms that we can use.
 
 ### Minimize ###
+What’s left now is to find the point x that minimises the mean square error. Luckily, scipy comes with several optimisation algorithms that we can use.
+
 ```Python
 # Used to calculate location of tag using anchor distances as specified by:
 # https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
