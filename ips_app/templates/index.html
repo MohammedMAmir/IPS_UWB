@@ -34,12 +34,14 @@
             <!-- Creates a Card For Each Anchor in Anchors Object -->
             {% for anchor in anchors %}    
                     <div class="col-sm-4">
+                        <a href="/anchor/{{anchor.anchor_id}}">
                         <div class="card">
                         <h4><b>Anchor ID:</b> {{anchor.anchor_id}}</h4>
                         <p><b>Anchor Tag:</b> {{anchor.tag_id}}</p>
                         <p><b>Anchor Position:</b> ({{anchor.anch_x}}, {{anchor.anch_y}})</p>
                         <p><b>Anchor Distance:</b> {{anchor.anchor_distance}}</p>
                     </div>
+                    </a>
                 </div>
             {% endfor %}    
         </div>

@@ -32,6 +32,7 @@ class tagModel(db.Model):
    
    # The number of anchors associated with this tag
    num_anchors = db.Column(db.Integer, nullable=False, default = 0)
+   anchors = db.relationship("AnchorModel", cascade="all,delete", backref="parent")
 
    def __repr__(self):
       return f"""tag(tag_id = {self.tag_id}, senior_name = {self.senior_name}, 
@@ -187,11 +188,11 @@ class tag(Resource):
          abort(404, "tag not found")
       db.session.delete(tag)
       db.session.commit()
-      return tagModel.query.all(), 200
+      return tagModel.query.all(), 204
 
 # API route for updating tags
 api.add_resource(tags, '/api/tags/')
-api.add_resource(tag, '/api/tags/<int:id>')
+api.add_resource(tag, '/api/tag/<int:id>')
 
 
 
@@ -262,9 +263,11 @@ class Anchor(Resource):
       anchor = AnchorModel.query.filter_by(anchor_id=id).first()
       if not anchor:
          abort(404, "tag not found")
+      tag = tagModel.query.filter_by(tag_id = anchor.tag_id).first()
+      tag.num_anchors -= 1
       db.session.delete(anchor)
       db.session.commit()
-      return AnchorModel.query.all(), 200
+      return AnchorModel.query.all(), 204
 
 api.add_resource(Anchors, '/api/anchors/')
 api.add_resource(Anchor, '/api/anchor/<id>')
@@ -301,6 +304,12 @@ def viewtag(id):
    # Send the tag page, the current tag, and all of the anchors for that tag
    return render_template('tag.html', tag=tag, anchors=anchors)
 
+# Route to Visualize a Specific Anchor
+@app.route('/anchor/<id>', methods=['GET'])
+def viewAnchor(id):
+   anchor= AnchorModel.query.filter_by(anchor_id=id).first()
+   # Send the anchor page and the current anchor
+   return render_template('anchor.html', anchor=anchor)
 
 # Run the app
 if __name__ == '__main__':

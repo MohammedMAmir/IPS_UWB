@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Anchor {anchor.anchor_id}}{% endblock %}
+
+{% block body %}
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Main Content Container -->
+    <div class="container section">
+        <div class="row">
+            <!-- Info About the Tag -->
+            <div class="container-fluid map-info col-sm-6">
+                <div class="card-header heading">Anchor {{anchor.anchor_id}} 
+                    <button type="button" class="btn btn-danger garbage" id="garbage" onclick="deleteRequest({{anchor.anchor_id}})"><i class="bi bi-trash"></i></button>
+                </div>
+                
+                <hr>
+                <div class="card-body">
+                    <h4>Tag ID: {{anchor.tag_id}}</h4>
+                    <h4>Anchor Position: ({{anchor.anch_x}}, {{anchor.anch_y}})</h4>
+                    <h4>Anchor Distance: {{anchor.anchor_distance}}</h4>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        function deleteRequest(id){
+            console.log(id)
+            $.ajax({
+             type: "DELETE",
+             url: "/api/anchor/"+id,
+             success: function (result) {
+
+                 alert("success");// write success in " "
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+          });
+          location.href = "/";
+        }
+        
+    </script>
+</div>
+{% endblock %}

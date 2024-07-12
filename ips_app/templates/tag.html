@@ -10,14 +10,18 @@
         <div class="row">
             <!-- Info About the Tag -->
             <div class="container-fluid map-info col-sm-6">
-                <div class="card-header heading">{{tag.senior_name}}
+                <div class="card-header heading">{{tag.senior_name}} 
+                    <button type="button" class="btn btn-danger garbage" id="garbage" onclick="deleteRequest({{tag.tag_id}})"><i class="bi bi-trash"></i></button>
                 </div>
+                
                 <hr>
                 <div class="card-body">
                     <h4>Tag ID: {{tag.tag_id}}</h4>
                     <h4>Senior Position: ({{tag.senior_x}}, {{tag.senior_y}})</h4>
                     <h4>Associated Anchors: {{tag.num_anchors}}</h4>
+                    
                 </div>
+                
             </div>
             <!-- Map for the Tag and It's Anchors -->
             <div class="container map">
@@ -76,6 +80,27 @@
         // Call the Functions to Draw the Grid and Add the Points
         drop_points();
         draw_grid();
+    </script>
+    <script>
+        function deleteRequest(id){
+            console.log(id)
+            $.ajax({
+             type: "DELETE",
+             url: "/api/tag/"+id,
+             success: function (result) {
+
+                 alert("success");// write success in " "
+             },
+
+             error: function (jqXHR, status) {
+                 // error handler
+                 console.log(jqXHR);
+                 alert('fail' + status.code);
+             }
+          });
+          location.href = "/";
+        }
+        
     </script>
 </div>
 {% endblock %}
