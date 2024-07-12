@@ -264,14 +264,14 @@ Given a point X, we can estimate how well it replaces P. We can do this simply b
 
 Under this new formulation, we can see trilateration as an optimisation problem. We need to find the point X that minimises a certain error function. For our X, we have not one but n sources of error: one for each anchor:
 
-  \[e_1 = d_1 - dist\left(X, L_1\right)\]
+  $\[e_1 = d_1 - dist\left(X, L_1\right)\]$
 
-  \[e_2= d_2 - dist\left(X, L_2\right)\]
+  $\[e_2= d_2 - dist\left(X, L_2\right)\]$
 
-  \[e_3 = d_3 - dist\left(X, L_3\right)\]
+  $\[e_3 = d_3 - dist\left(X, L_3\right)\]$
 
 A very common way to merge these different contributions is to average their squares. This takes away the for possibility of negative and positive errors to cancel each others out, as squares are always positive. The quantity obtained is known as mean squared error:
 
-  \[\frac{\sum { \left[d_i  -dist\left(X,L_i,\right)\right] }^2 }{N}\]
+  $\[\frac{\sum { \left[d_i  -dist\left(X,L_i,\right)\right] }^2 }{N}\]$
 
 
