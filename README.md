@@ -200,6 +200,29 @@ The api for the project can be used to query and update the database. It is brok
 ---
 ## Positioning Calculation ##
 The positioning algorithm is called everytime that an anchor makes a PATCH request to the database. Specifically, everytime an anchor updates the distance to its associated anchor, the following two functions are called by the server to calcualate the new position of the tag:
+
+While it is definitely true that trilateration can be seen (and solved) as a geometrical matrix problem, this is often impractical. Relying on the mathematical modelling requires us to have an incredibly high accuracy on our measurements. Worst case scenario: if the circles do not meet in a single point, the set of equations will have no solution. This leaves us with nothing. Even assuming we do have perfect precision, the mathematical approach does not scale nicely. What if we have not three, but four points? What if we have one hundred?
+
+The problem of trilateration can be approached from an optimisation point of view. Ignoring circles and intersections, what is the point $X=\left(\phi_x, \lambda_x\right)$ that provides us with the best approximation to the actual position P?
+
+Given a point X, we can estimate how well it replaces P. We can do this simply by calculating its distance from each anchor $L_i$. If those distances perfectly match with their respective distances d_i, then X is indeed P. The more X deviates from these distances, the further it is assumed from P.
+
+Under this new formulation, we can see trilateration as an optimisation problem. We need to find the point X that minimises a certain error function. For our X, we have not one but n sources of error: one for each anchor:
+
+  $\[e_1 = d_1 - dist\left(X, L_1\right)\]$
+
+  $\[e_2= d_2 - dist\left(X, L_2\right)\]$
+
+  $\[e_3 = d_3 - dist\left(X, L_3\right)\]$
+
+A very common way to merge these different contributions is to average their squares. This takes away the for possibility of negative and positive errors to cancel each others out, as squares are always positive. The quantity obtained is known as mean squared error:
+
+  $\[\frac{\sum { \left[d_i  -dist\left(X,L_i,\right)\right] }^2 }{N}\]$
+
+What is really nice about this solution is that it can be used to take into account an arbitrary number of points. The piece of code below calculates the mean square error of a point x, given a list of locations and their relative distances from the actual target.
+
+### Mean Square Error ###
+
 ```Python
 # Mean Square Error
 # locations: [ (x1, y1), ... ]
@@ -210,7 +233,11 @@ def mse(x, locations, distances):
         distance_calculated = math.dist(x, location)
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
+```
+What’s left now is to find the point x that minimises the mean square error. Luckily, scipy comes with several optimisation algorithms that we can use.
 
+### Minimize ###
+```Python
 # Used to calculate location of tag using anchor distances as specified by:
 # https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
 # input: the anchor making the update
@@ -256,22 +283,6 @@ def update_location(anchor: AnchorModel):
 ```
 The math of the algorithm is explained at the following link https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/ . 
 
-While it is definitely true that trilateration can be seen (and solved) as a geometrical matrix problem, this is often impractical. Relying on the mathematical modelling requires us to have an incredibly high accuracy on our measurements. Worst case scenario: if the circles do not meet in a single point, the set of equations will have no solution. This leaves us with nothing. Even assuming we do have perfect precision, the mathematical approach does not scale nicely. What if we have not three, but four points? What if we have one hundred?
 
-The problem of trilateration can be approached from an optimisation point of view. Ignoring circles and intersections, what is the point $X=\left(\phi_x, \lambda_x\right)$ that provides us with the best approximation to the actual position P?
-
-Given a point X, we can estimate how well it replaces P. We can do this simply by calculating its distance from each anchor $L_i$. If those distances perfectly match with their respective distances d_i, then X is indeed P. The more X deviates from these distances, the further it is assumed from P.
-
-Under this new formulation, we can see trilateration as an optimisation problem. We need to find the point X that minimises a certain error function. For our X, we have not one but n sources of error: one for each anchor:
-
-  $\[e_1 = d_1 - dist\left(X, L_1\right)\]$
-
-  $\[e_2= d_2 - dist\left(X, L_2\right)\]$
-
-  $\[e_3 = d_3 - dist\left(X, L_3\right)\]$
-
-A very common way to merge these different contributions is to average their squares. This takes away the for possibility of negative and positive errors to cancel each others out, as squares are always positive. The quantity obtained is known as mean squared error:
-
-  $\[\frac{\sum { \left[d_i  -dist\left(X,L_i,\right)\right] }^2 }{N}\]$
 
 
