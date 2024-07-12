@@ -87,9 +87,9 @@ def update_location(anchor: AnchorModel):
       mse,                         # The error function
       initial_guess,            # The initial guess
       args=(locations, distances), # Additional parameters for mse
-      method='L-BFGS-B',           # The optimisation algorithm
+      method='BFGS',           # The optimisation algorithm
       options={
-         'ftol':1e-2,         # Tolerance
+         'ftol':1e-4,         # Tolerance
          'maxiter': 1e+8      # Maximum iterations
       })
    
