@@ -258,9 +258,9 @@ The math of the algorithm is explained at the following link https://www.alanzuc
 
 While it is definitely true that trilateration can be seen (and solved) as a geometrical matrix problem, this is often impractical. Relying on the mathematical modelling requires us to have an incredibly high accuracy on our measurements. Worst case scenario: if the circles do not meet in a single point, the set of equations will have no solution. This leaves us with nothing. Even assuming we do have perfect precision, the mathematical approach does not scale nicely. What if we have not three, but four points? What if we have one hundred?
 
-The problem of trilateration can be approached from an optimisation point of view. Ignoring circles and intersections, what is the point X=\left(\phi_x, \lambda_x\right) that provides us with the best approximation to the actual position P?
+The problem of trilateration can be approached from an optimisation point of view. Ignoring circles and intersections, what is the point $X=\left(\phi_x, \lambda_x\right)$ that provides us with the best approximation to the actual position P?
 
-Given a point X, we can estimate how well it replaces P. We can do this simply by calculating its distance from each anchor L_i. If those distances perfectly match with their respective distances d_i, then X is indeed P. The more X deviates from these distances, the further it is assumed from P.
+Given a point X, we can estimate how well it replaces P. We can do this simply by calculating its distance from each anchor $L_i$. If those distances perfectly match with their respective distances d_i, then X is indeed P. The more X deviates from these distances, the further it is assumed from P.
 
 Under this new formulation, we can see trilateration as an optimisation problem. We need to find the point X that minimises a certain error function. For our X, we have not one but n sources of error: one for each anchor:
 
