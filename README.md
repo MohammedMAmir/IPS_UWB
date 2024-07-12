@@ -213,20 +213,31 @@ def mse(x, locations, distances):
 
 # Used to calculate location of tag using anchor distances as specified by:
 # https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
+# input: the anchor making the update
+# output: the updated x, y position of the senior stored as a tuple in result
 def update_location(anchor: AnchorModel):
+   # Get the tag_id of the tag associated with anchor making the update
    anchortag = anchor.tag_id
+   # Grab the tag from the database
    tag = tagModel.query.filter_by(tag_id=anchortag).first()
+   # Last known x and y positions of the senior
    xToUpdate = float(tag.senior_x)
    yToUpdate = float(tag.senior_y)
    
+   # Grab all of the anchors associated with this tag from the database
    anchorsIntag = AnchorModel.query.filter_by(tag_id=anchortag).all()
    locations = []
    distances = []
+   # Create a list of anchor locations and a list of anchor distances
    for anchors in anchorsIntag:
       locations.append((int(anchors.anch_x), int(anchors.anch_y)))
       distances.append((float(anchors.anchor_distance)))
    
+   # Set the initial guess to the previous known location of the senior
    initial_guess = (xToUpdate, yToUpdate)
+
+   # Find the new x and y position of the senior by minimizing the error
+   # of a guessed location and the actual distances measured
    result = minimize(
       mse,                         # The error function
       initial_guess,            # The initial guess
@@ -237,11 +248,30 @@ def update_location(anchor: AnchorModel):
          'maxiter': 1e+8      # Maximum iterations
       })
    
+   # Set the new location of the senior in the database
    tag.senior_x = result.x[0]
    tag.senior_y = result.x[1]
    db.session.commit()
    return result
 ```
-The math of the algorithm is explained at the following link https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
+The math of the algorithm is explained at the following link https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/ . 
+
+While it is definitely true that trilateration can be seen (and solved) as a geometrical matrix problem, this is often impractical. Relying on the mathematical modelling requires us to have an incredibly high accuracy on our measurements. Worst case scenario: if the circles do not meet in a single point, the set of equations will have no solution. This leaves us with nothing. Even assuming we do have perfect precision, the mathematical approach does not scale nicely. What if we have not three, but four points? What if we have one hundred?
+
+The problem of trilateration can be approached from an optimisation point of view. Ignoring circles and intersections, what is the point $X=\left(\phi_x, \lambda_x\right)$ that provides us with the best approximation to the actual position P?
+
+Given a point X, we can estimate how well it replaces P. We can do this simply by calculating its distance from each anchor $L_i$. If those distances perfectly match with their respective distances d_i, then X is indeed P. The more X deviates from these distances, the further it is assumed from P.
+
+Under this new formulation, we can see trilateration as an optimisation problem. We need to find the point X that minimises a certain error function. For our X, we have not one but n sources of error: one for each anchor:
+
+  $\[e_1 = d_1 - dist\left(X, L_1\right)\]$
+
+  $\[e_2= d_2 - dist\left(X, L_2\right)\]$
+
+  $\[e_3 = d_3 - dist\left(X, L_3\right)\]$
+
+A very common way to merge these different contributions is to average their squares. This takes away the for possibility of negative and positive errors to cancel each others out, as squares are always positive. The quantity obtained is known as mean squared error:
+
+  $\[\frac{\sum { \left[d_i  -dist\left(X,L_i,\right)\right] }^2 }{N}\]$
 
 
