@@ -69,20 +69,31 @@ def mse(x, locations, distances):
 
 # Used to calculate location of tag using anchor distances as specified by:
 # https://www.alanzucconi.com/2017/03/13/positioning-and-trilateration/
+# input: the anchor making the update
+# output: the updated x, y position of the senior stored as a tuple in result
 def update_location(anchor: AnchorModel):
+   # Get the tag_id of the tag associated with anchor making the update
    anchortag = anchor.tag_id
+   # Grab the tag from the database
    tag = tagModel.query.filter_by(tag_id=anchortag).first()
+   # Last known x and y positions of the senior
    xToUpdate = float(tag.senior_x)
    yToUpdate = float(tag.senior_y)
    
+   # Grab all of the anchors associated with this tag from the database
    anchorsIntag = AnchorModel.query.filter_by(tag_id=anchortag).all()
    locations = []
    distances = []
+   # Create a list of anchor locations and a list of anchor distances
    for anchors in anchorsIntag:
       locations.append((int(anchors.anch_x), int(anchors.anch_y)))
       distances.append((float(anchors.anchor_distance)))
    
+   # Set the initial guess to the previous known location of the senior
    initial_guess = (xToUpdate, yToUpdate)
+
+   # Find the new x and y position of the senior by minimizing the error
+   # of a guessed location and the actual distances measured
    result = minimize(
       mse,                         # The error function
       initial_guess,            # The initial guess
@@ -93,6 +104,7 @@ def update_location(anchor: AnchorModel):
          'maxiter': 1e+8      # Maximum iterations
       })
    
+   # Set the new location of the senior in the database
    tag.senior_x = result.x[0]
    tag.senior_y = result.x[1]
    db.session.commit()
