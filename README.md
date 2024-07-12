@@ -38,7 +38,7 @@ python3 -m venv .venv
 This will create a virtual environment folder that lets you import all the dependencies of the project without overriding dependency versions already installed on your device.
 - To activate the virtual environment use the command
 ```bash
-source .venv/Scripts/activate
+.venv\Scripts\activate
 ```
 in your terminal window. You will need to do this everytime you open a new terminal and want to run the server.
 - Navigate into the "ips_app" folder using the command
@@ -48,7 +48,7 @@ cd ips_app
 in the terminal window
 - Finally, install all of the modules used by the project by entering the command
 ```bash
-python3 -m install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 - Wait for all of the modules to install
     - if an error occurs or a module is missing, just install it manually using the command
@@ -167,9 +167,10 @@ The api for the project can be used to query and update the database. It is brok
            {"tag_id": "[some tag id]", "anch_x": "[the anchor x position]", "anch_y": "[the anchor y position]"}
            ```
             - The corresponding anchor attached to the specified tag will be created in the database with a unique anchor ID and anchor x and y positions specified
-- Tag (available at the url: https://127.0.0.1:81/api/tag/<id>)
+- Tag (available at the url: https://127.0.0.1:81/api/tag/id)
     * Used to get, update, and delete information about tag with tag_id = id
     * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
+        * Ex. https://127.0.0.1:81/api/tag/1 
     * Endpoints:
         - GET:
             - Request takes no parameters and returns the tag in the url if it is stored in the database
@@ -182,18 +183,19 @@ The api for the project can be used to query and update the database. It is brok
         - DELETE:
             - Request takes no parameters and deletes the tag that in the url if it is stored in the database
             - If the tag has corresponding anchors attached to it, they will also be deleted from the database
-- Anchor (available at the url: https://127.0.0.1:81/api/anchor/<id>)
+- Anchor (available at the url: https://127.0.0.1:81/api/anchor/id)
     * Used to get, update, and delete information about tag with anchor_id = id
+        * Ex. https://127.0.0.1:81/api/anchor/1 
     * [https://127.0.0.1:81 can later be replaced with whatever url the server is hosted at]
     * Endpoints
         - GET:
             - Request takes no parameters and returns the anchor in the url if it is stored in the database 
         - PATCH:
             - Request makes a patch request with the following JSON message body:
-               Request makes a patch request with the following JSON message body:
               ```JSON
               {"anchor_distance": "[the anchor's updated distance from itself to it's tag]"} OR {"anchor_distance:" "[the anchor's updated distance from itself to it's tag], "}
               ```
+              Ex. 
         - DELETE:
             - Request takes no parameters and deletes the anchor with the anchor_id specified in the url if it is stored in the database
 
